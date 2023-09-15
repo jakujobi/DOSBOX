@@ -27,4 +27,4 @@ Hello PROC  ; Start of procedure named 'Hello'
  int 21h  ; Call DOS with function specified in AH register (exit program)
 Hello ENDP  ; End of 'Hello' procedure
 
-END Hello  ; Tell assembler to start execution at 'Hello' procedure ,
+END Hello  ; Tell assembler to start execution at 'Hello' procedure

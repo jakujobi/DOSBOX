@@ -1,8 +1,14 @@
-;; Assignment 2 - Assembly Language Fall 2023
-;; Date - 15th of September 2023
-;; Notes by John Akujobi
-;; I added some comments following the concepts learned from the last 2 classes
-;; And from what i learned online in stack overflow and Github
+; Name: John Akujobi
+; Class: CSC 314
+; Assign: Assignment 2
+; Due: 20th September 2023
+;
+; Description: This program is a console application written in Assembly language that displays two messages on the console:
+;               'Hello, my name is John Akujobi' and 'The show I binge watched last summer was...The Last of Us'.
+
+; Notes by John Akujobi on the 15th of September 2023:
+;      I added some comments following the concepts learned from the last 2 classes
+;      And from what i learned online in stack overflow and Github
 
  .MODEL SMALL  ; Set memory model to small
 .586  ; Target the Intel 586 processor

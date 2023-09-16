@@ -15,7 +15,7 @@
 .STACK 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
 
 .DATA  ; Start of data segment
-Message DB 'Hello, my name is John Akujobi', 13, 10, 'The show I binge watched last summer was...The Last of Us', 13, 10, '$'  ; Declare a string with two messages
+Message DB 'Hello, my name is John Akujobi', 13, 10, 'The show I binge watched last summer was The Last of Us', 13, 10, '$'  ; Declare a string with two messages
 
 .CODE  ; Start of code segment
 

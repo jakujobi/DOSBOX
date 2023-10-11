@@ -25,9 +25,78 @@ Hello PROC  ; Start of procedure named 'Hello'
     mov dx, OFFSET Message  ; Load offset of 'Message' string into DX register
     mov ah, 9h  ; Set AH register to 9 (function code for 'display string' in DOS)
     int 21h  ; Call DOS with function specified in AH register (display string)
+
     mov al, 0  ; Set return code to 0
     mov ah, 4ch  ; Set AH register to 4C (function code for 'exit' in DOS)
     int 21h  ; Call DOS with function specified in AH register (exit program)
 Hello ENDP  ; End of 'Hello' procedure
 
 END Hello  ; Tell assembler to start execution at 'Hello' procedure
+
+
+; Name:		Your Name
+; Class:	CSc 314
+; Assign: 	3
+; Due:		10/13/23
+;
+; Description:	This program retrieves the current date and displays it in the format: Today's date is: MM/DD/YYYY
+
+.model small
+.data
+
+msg db "Today's date is: ", "$"
+
+; Variables to store date values
+current_month db 0
+current_day db 0
+current_year dw 0
+
+.code
+extrn PutDec:near  ; External procedure declaration
+
+start:
+	; Call DOS Service to retrieve date
+	mov ah, 2Ah
+	int 21h
+
+	; Store retrieved values in memory
+	mov [current_month], dh
+	mov [current_day], dl
+	mov [current_year], cx
+
+	; Display "Today's date is: "
+	mov ah, 9
+	mov dx, offset msg
+	int 21h
+
+	; Display Month
+	mov dh, 0
+	mov dl, [current_month]
+	mov ax, dx
+	call PutDec
+
+	; Display '/'
+	mov ah, 2
+	mov dl, '/'
+	int 21h
+
+	; Display Day
+	mov dh, 0
+	mov dl, [current_day]
+	mov ax, dx
+	call PutDec
+
+	; Display '/'
+	mov ah, 2
+	mov dl, '/'
+	int 21h
+
+	; Display Year
+	mov ax, [current_year]
+	call PutDec
+
+	; Exit
+	mov ah, 4Ch
+	int 21h
+
+end start

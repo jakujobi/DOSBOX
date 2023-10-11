@@ -1,12 +1,14 @@
 ; This program retrieves the current date and displays it in the format: Today's date is: MM/DD/YYYY
 
+include pcmac.inc
+
 .MODEL SMALL  ; Set memory model to small
 .586  ; Target the Intel 586 processor
 .STACK 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
 
 .DATA  ; Start of data segment
 
-msg db "Today's date is: ", "$" ; Define a string message to display the date
+msg db "Today's date is: ", '$' ; Define a string message to display the date
 
 ; Variables to store date values
 current_month db 0 ; Define a variable to store the current month
@@ -15,9 +17,14 @@ current_year dw 0 ; Define a variable to store the current year
 
 .CODE  ; Start of code segment
 extrn PutDec:near  ; External procedure declaration
+extrn GetDec:near
 
 ;start:
-JAKUJ: ;PROC; Start of procedure named JAKUJ
+JAKUJ PROC ;PROC; Start of procedure named JAKUJ
+
+    _Begin ; Initialize the program
+    _PutStr msg ; Display the message
+
 
     ; Call DOS Service to retrieve date
     mov ah, 2Ah ; Set the value of AH register to 2Ah to call DOS Service to retrieve date
@@ -29,11 +36,13 @@ JAKUJ: ;PROC; Start of procedure named JAKUJ
     mov [current_year], cx ; Store the retrieved year value in current_year variable
 
     ; Display "Today's date is: "
+        ; Code from the Assignment 2
+        ;mov ax, @data ; Move the value of AX register to DS register
+        ;mov ds, ax ; Move the value of OFFSET msg to DX register
     ;mov ah, 9
-    mov ax, ; Move the value of AX register to DS register
-    mov ds, ax ; Move the value of OFFSET msg to DX register
-    mov dx, OFFSET msg ; Set the value of DX register to the offset of the message string
-    int 21h ; Call DOS Service to display the message
+    ;mov dx, OFFSET msg ; Set the value of DX register to the offset of the message string
+    ;int 21h ; Call DOS Service to display the message
+    ;_PutStr msg
 
     ; Display Month
     mov dh, 0 ; Set the value of DH register to 0
@@ -64,8 +73,9 @@ JAKUJ: ;PROC; Start of procedure named JAKUJ
     ; Exit
     mov ah, 4Ch ; Set the value of AH register to 4Ch to exit the program
     int 21h ; Call DOS Service to exit the program
-
-;AKUJ ENDP  ; End of procedure named AKUJ
+    
+_Exit 0 ; Exit the program
+JAKUJ ENDP  ; End of procedure named AKUJ
 
 END JAKUJ  ; Tell assembler to start execution at label named
 ;end start

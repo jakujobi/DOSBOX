@@ -1,4 +1,13 @@
-; This program retrieves the current date and displays it in the format: Today's date is: MM/DD/YYYY
+; Name: John Akujobi
+; Class: CSC 314
+; Assign: Assignment 3
+; Due: 13th October 2023
+
+; Description:
+; This program retrieves the current date and displays it in the format:
+; Today's date is: MM/DD/YYYY
+; It uses the DOS Service 2Ah to retrieve the date
+; It uses the PutDec procedure to display the date
 
 include pcmac.inc
 

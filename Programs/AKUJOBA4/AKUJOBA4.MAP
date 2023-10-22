@@ -1,8 +1,8 @@
 
  Start  Stop   Length Name                   Class
- 00000H 00237H 00238H _TEXT                  CODE
- 00238H 0028FH 00058H _DATA                  DATA
- 00290H 0038FH 00100H STACK                  STACK
+ 00000H 00235H 00236H _TEXT                  CODE
+ 00236H 002A3H 0006EH _DATA                  DATA
+ 002B0H 003AFH 00100H STACK                  STACK
 
  Origin   Group
  0023:0   DGROUP

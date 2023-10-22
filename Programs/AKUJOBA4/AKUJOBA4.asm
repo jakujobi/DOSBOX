@@ -6,6 +6,7 @@
 ;; Description:
 ;; This program converts a temperature from Celsius to Fahrenheit.
 ;; It uses the formula: Fahrenheit = (Celsius * 9/5) + 32
+    ; Multiply by 9, divide by 5, then add 32
 
 ;;TO RUN________________________
 ;; Open DosBox
@@ -27,7 +28,10 @@ include pcmac.inc  ; Include pcmac.inc file
 
 .data  ; Start of data segment
 input_msg db "Enter temperature in Celsius: ", '$'
-output_msg db "Fahrenheit: ", '$', 
+output_msg db "The temperature in Fahrenheit: ", '$', 
+
+; variable to store the Celsius temperature
+celsius dw 0
 
 .CODE
 extrn PutDec:near
@@ -39,27 +43,27 @@ JAKUJ PROC  ; Start of main procedure
 
     ; Get Celsius temperature from user
     call GetDec ; Get the celsius temperature and store in ax
-    mov cx, ax  ; move the celsius temperature to cx
+    mov celsius, ax  ; move the celsius temperature to cx
                 ; this is to protect it in case PutStr changes ax
 
     _PutStr output_msg  ; Prints the text in output_msg
-    int 21h
+    ;int 21h
 
-    ; Convert Celsius to Fahrenheit
-    ; Fahrenheit = (Celsius * 9/5) + 32
-    ; Multiply by 9
-    mov ax, cx  ; move the celsius temperature back to ax
+    ; Prepare the registers for multiplication and division
+    mov ax, celsius  ; move the celsius temperature back to ax
     mov bx, 9   ; put 9 into the bx register
                 ; this to prepare to multiply ax by 9
     mov bl, 5   ; put 5 into the bl register
                 ; this to prepare to divide ax by 5
+    xor dx, dx  ; clear dx for division (learned this xor online)
 
 if_negative:
     cmp ax, 0   ; compare ax to 0
     jge else_if_positive ; if ax is greater than or equal to 0, jump to else_if_positive
     imul bx     ; multiply ax(celsius) by bx(9)
-    idiv bl      ; divide ax(celsius*9) by bl(5)
+    idiv bl     ; divide ax(celsius*9) by bl(5)
                 ; the answer is in ax
+    jmp end_if  ; if ax is less than 0, jump to end_if
 
 else_if_positive:
     mul bx      ; multiply ax(celsius) by bx(9)
@@ -71,12 +75,10 @@ end_if:
     add ax, 32 ; Add 32 to the answer
     call PutDec ; Display the result
                 ; PutDec takes the value to display from ax
-
-    _Exit 0     ; Exit the program with exit code 0
-
+                ; so we don't need to move it to ax
 ;;_________________________________________________________
 _Exit 0 ; Exit the program with exit code 0
-JAKUJ    endp    ; End of main procedure
+JAKUJ   endp    ; End of main procedure
 
 End JAKUJ    ; End of program
 

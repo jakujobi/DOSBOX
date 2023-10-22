@@ -7,16 +7,18 @@
 ;; This program converts a temperature from Celsius to Fahrenheit.
 ;; It uses the formula: Fahrenheit = (Celsius * 9/5) + 32
 
-;;To Run
+;;TO RUN________________________
 ;; Open DosBox
 ;; Navigate to:
-;;     c:\path\to\asm\file
+;;     c:\path\to\folder_containing_AKUJOBA4_file
 ;; Type:
-;;      nasm -f obj filename.asm
+;;      masm AKUJOBA4.asm
+;; Press enter
+;; Type:
+;;     link AKUJOBA4,,,util
+;; Press enter twice
 ;; Type and enter:
-;;     link filename.obj,,,util
-;; Type and enter:
-;;     filename.exe
+;;     AKUJOBA4.exe
 
 include pcmac.inc  ; Include pcmac.inc file
 .model small  ; Set memory model to small

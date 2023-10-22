@@ -40,6 +40,9 @@ JAKUJ PROC
     call GetDec ; Get the celsius temperature and store in ax
     mov cx, ax  ; move the celsius temperature to cx
 
+    _PutStr output_msg
+    int 21h
+
     ; Exit
     _Exit 0
 

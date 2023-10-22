@@ -43,6 +43,13 @@ JAKUJ PROC
     _PutStr output_msg
     int 21h
 
+    ; Convert Celsius to Fahrenheit
+    ; Fahrenheit = (Celsius * 9/5) + 32
+    ; Multiply by 9
+    mov al, cx
+    mov bx, 9
+    mul ax
+
     ; Exit
     _Exit 0
 

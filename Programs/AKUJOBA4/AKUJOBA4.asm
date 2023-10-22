@@ -48,11 +48,12 @@ JAKUJ PROC
     ; Multiply by 9
     mov al, cx
     mov bx, 9
-    mul ax
+    mul bx
     
+    mov cx, ax ;just to keep a copy of the answer
     ; Divide by 5
-    mov bx, 5
-    div ax
+    mov bl, 5
+    div bl
     
     ; Add 32
     add ax, 32

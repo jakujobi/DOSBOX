@@ -49,7 +49,11 @@ JAKUJ PROC
     mov al, cx
     mov bx, 9
     mul ax
-
+    
+    ; Divide by 5
+    mov bx, 5
+    div ax
+    
     ; Exit
     _Exit 0
 

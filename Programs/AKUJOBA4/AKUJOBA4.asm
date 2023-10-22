@@ -36,7 +36,9 @@ JAKUJ PROC
     _Begin
     _PutStr input_msg
 
-
+    ; Get Celsius temperature from user
+    call GetDec ; Get the celsius temperature and store in ax
+    mov cx, ax  ; move the celsius temperature to cx
 
     ; Exit
     _Exit 0

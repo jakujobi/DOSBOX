@@ -1,11 +1,11 @@
-; Name: Celsius to Fahrenheit Conversion
-; Class: CSC 314
-; Assign: Assignment 4
-; Due: 21st October 2023
+;; Name: Celsius to Fahrenheit Conversion
+;; Class: CSC 314
+;; Assign: Assignment 4
+;; Due: 21st October 2023
 
-; Description:
-; This program converts a temperature from Celsius to Fahrenheit.
-; It uses the formula: Fahrenheit = (Celsius * 9/5) + 32
+;; Description:
+;; This program converts a temperature from Celsius to Fahrenheit.
+;; It uses the formula: Fahrenheit = (Celsius * 9/5) + 32
 
 ;;To Run
 ;; Open DosBox
@@ -39,6 +39,7 @@ JAKUJ PROC
     ; Get Celsius temperature from user
     call GetDec ; Get the celsius temperature and store in ax
     mov cx, ax  ; move the celsius temperature to cx
+                ; this is to protect it in case PutStr changes ax
 
     _PutStr output_msg  ; Prints the text in output_msg
     int 21h
@@ -46,22 +47,21 @@ JAKUJ PROC
     ; Convert Celsius to Fahrenheit
     ; Fahrenheit = (Celsius * 9/5) + 32
     ; Multiply by 9
-    mov ax, cx
-    mov bx, 9
-    mul bx
+    mov ax, cx  ; move the celsius temperature back to ax
+    mov bx, 9   ; put 9 into the bx register
+    mul bx      ; multiply ax(celsius) by bx(9)
     
-    mov cx, ax ;just to keep a copy of the answer
-    ; Divide by 5
-    mov bl, 5
-    div bl
+    mov cx, ax  ;just to keep a copy of the answer
+    mov bl, 5   ; put 5 into the bl register
+    div bl      ; divide ax(celsius*9) by bl(5)
+                ; the answer is in ax
     
     add ax, 32 ; Add 32 to the answer
 
     call PutDec ; Display the result
                 ; PutDec takes the value to display from ax
 
-    ; Exit
-    _Exit 0
+    _Exit 0     ; Exit the program with exit code 0
 
 ;;_________________________________________________________
 _Exit 0 ; Exit the program with exit code 0

@@ -50,15 +50,25 @@ JAKUJ PROC  ; Start of main procedure
     ; Multiply by 9
     mov ax, cx  ; move the celsius temperature back to ax
     mov bx, 9   ; put 9 into the bx register
-    mul bx      ; multiply ax(celsius) by bx(9)
-    
-    mov cx, ax  ;just to keep a copy of the answer
+                ; this to prepare to multiply ax by 9
     mov bl, 5   ; put 5 into the bl register
+                ; this to prepare to divide ax by 5
+
+if_negative:
+    cmp ax, 0   ; compare ax to 0
+    jge else_if_positive ; if ax is greater than or equal to 0, jump to else_if_positive
+    imul bx     ; multiply ax(celsius) by bx(9)
+    idiv bl      ; divide ax(celsius*9) by bl(5)
+                ; the answer is in ax
+
+else_if_positive:
+    mul bx      ; multiply ax(celsius) by bx(9)
+    ;mov cx, ax  ;just to keep a copy of the answer
     div bl      ; divide ax(celsius*9) by bl(5)
                 ; the answer is in ax
-    
-    add ax, 32 ; Add 32 to the answer
 
+end_if:
+    add ax, 32 ; Add 32 to the answer
     call PutDec ; Display the result
                 ; PutDec takes the value to display from ax
 

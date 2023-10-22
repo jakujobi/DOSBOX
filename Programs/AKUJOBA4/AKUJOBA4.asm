@@ -54,6 +54,12 @@ JAKUJ PROC
     mov bx, 5
     div ax
     
+    ; Add 32
+    add ax, 32
+
+    ; Display the result
+    call PutDec
+
     ; Exit
     _Exit 0
 

@@ -40,13 +40,13 @@ JAKUJ PROC
     call GetDec ; Get the celsius temperature and store in ax
     mov cx, ax  ; move the celsius temperature to cx
 
-    _PutStr output_msg
+    _PutStr output_msg  ; Prints the text in output_msg
     int 21h
 
     ; Convert Celsius to Fahrenheit
     ; Fahrenheit = (Celsius * 9/5) + 32
     ; Multiply by 9
-    mov al, cx
+    mov ax, cx
     mov bx, 9
     mul bx
     
@@ -55,11 +55,10 @@ JAKUJ PROC
     mov bl, 5
     div bl
     
-    ; Add 32
-    add ax, 32
+    add ax, 32 ; Add 32 to the answer
 
-    ; Display the result
-    call PutDec
+    call PutDec ; Display the result
+                ; PutDec takes the value to display from ax
 
     ; Exit
     _Exit 0

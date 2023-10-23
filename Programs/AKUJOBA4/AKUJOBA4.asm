@@ -53,7 +53,7 @@ JAKUJ PROC  ; Start of main procedure
     mov ax, celsius  ; move the celsius temperature back to ax
     mov bx, 9   ; put 9 into the bx register
                 ; this to prepare to multiply ax by 9
-    mov bl, 5   ; put 5 into the bl register
+    mov cx, 5   ; put 5 into the bl register
                 ; this to prepare to divide ax by 5
     xor dx, dx  ; clear dx for division (learned this xor online)
 
@@ -61,14 +61,14 @@ if_negative:
     cmp ax, 0   ; compare ax to 0
     jge else_if_positive ; if ax is greater than or equal to 0, jump to else_if_positive
     imul bx     ; multiply ax(celsius) by bx(9)
-    idiv bl     ; divide ax(celsius*9) by bl(5)
+    idiv cx     ; divide ax(celsius*9) by bl(5)
                 ; the answer is in ax
     jmp end_if  ; if ax is less than 0, jump to end_if
 
 else_if_positive:
     mul bx      ; multiply ax(celsius) by bx(9)
     ;mov cx, ax  ;just to keep a copy of the answer
-    div bl      ; divide ax(celsius*9) by bl(5)
+    div cx      ; divide ax(celsius*9) by bl(5)
                 ; the answer is in ax
 
 end_if:

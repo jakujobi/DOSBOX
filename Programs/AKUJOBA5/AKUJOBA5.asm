@@ -24,17 +24,13 @@ include pcmac.inc  ; Include pcmac.inc file
 .stack 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
 
 .data  ; Start of data segment
-;; msg db "Hello World!", 13. 10 "$"  ; Define a string
-;; Define variables here
+    userChar DB ?
+    trips DB ?
+    promptChar DB 'Enter a character: $'
+    promptTrips DB 'Enter number of trips (1-3): $'
+    errorMsg DB 'Invalid input. Enter a number between 1 and 3.$'
 
-
-;;_________________________________________________________
-.code  ; Start of code segment
-main    proc
-_Begin
-;_PutStr msg  ; Print the string (msg) to the screen [This overwrites ax]
-;; Type your code here
-
+    
 
 ;;_________________________________________________________
 _Exit 0 ; Exit the program with exit code 0

@@ -41,7 +41,11 @@ GetCharacter proc
 GetCharacter endp
 
 
+; Procedure to get the number of trips from the user
+GetTrips PROC
+    MOV trips, 0               ; Initialize trips to 0
 
+GetTrips endp
 
 
 ;;_________________________________________________________

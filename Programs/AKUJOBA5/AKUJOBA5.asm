@@ -70,10 +70,18 @@ MoveCharacter ENDP
 
 
 ; Delay procedure
-Delay PROC
+Delay proc
+    push ax
+    push cx
+    mov cx, 0FFFFh             ; Delay length
+delayLoop:
+    nop          ;or nope :)   ; No operation (delay)
+    LOOP delayLoop
+    pop cx
+    pop ax
+    ret
 
-
-Delay ENDP
+Delay endp
 
 
 
@@ -85,7 +93,7 @@ START:
     call GetCharacter          ; Get character from user
     call GetTrips              ; Get number of trips from user
     call MoveCharacter         ; Move character across screen
-    
+
     _exit 0                    ; Exit the program with exit code 0
 END START
 

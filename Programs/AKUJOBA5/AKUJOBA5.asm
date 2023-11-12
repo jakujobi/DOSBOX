@@ -18,7 +18,6 @@
 ;; Type and enter:
 ;;     filename.exe
 
-include pcmac.inc  ; Include pcmac.inc file
 .model small  ; Set memory model to small
 .586  ; Target the Intel 586 processor
 .stack 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
@@ -30,7 +29,20 @@ include pcmac.inc  ; Include pcmac.inc file
     promptTrips DB 'Enter number of trips (1-3): $'
     errorMsg DB 'Invalid input. Enter a number between 1 and 3.$'
 
-    
+include pcmac.inc  ; Include pcmac.inc file
+
+; Procedure to get a single character from the user
+GetCharacter proc
+    mov DX, OFFSET promptChar ; Load prompt message address
+    call WriteString           ; Write prompt to screen
+    call ReadChar              ; Read a character from user
+    mov userChar, AL           ; Store the character
+    ret
+GetCharacter endp
+
+
+
+
 
 ;;_________________________________________________________
 _Exit 0 ; Exit the program with exit code 0

@@ -62,11 +62,28 @@ GetTrips endp
 
 
 ; Procedure to move character across the screen
-MoveCharacter PROC
-    MOV CL, trips              ; Number of trips
-    MOV CH, 0                  ; Counter for trips
+MoveCharacter proc
+    mov cl, trips              ; Number of trips
+    mov ch, 0                  ; Counter for trips
+tripLoop:
+    ; Move character to the right
+    mov dl, 0                  ; Position counter
 
-MoveCharacter ENDP
+    ; Loop to move character to the right
+    moveRightLoop:
+        mov ah, 2              ; Set function to move cursor
+        mov bh, 0              ; Set page number
+        mov dh, 0              ; Set row number
+        mov dl, dl              ; Set column number
+        int 10h                ; Call interrupt to move cursor
+        mov dl, userChar       ; Load character to move
+        int 21h                ; Call interrupt to write character
+        call Delay             ; Call delay procedure
+        inc dl                 ; Increment column number
+        cmp dl, 79             ; Compare column number with 79
+        jle moveRightLoop      ; Jump if less than or equal to 79
+
+MoveCharacter endp
 
 
 ; Delay procedure

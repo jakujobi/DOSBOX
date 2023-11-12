@@ -83,6 +83,7 @@ moveRightLoop:
     cmp dl, 79             ; Compare column number with 79
     jle moveRightLoop      ; Jump if less than or equal to 79
     
+    
     ; Move character to the left
 moveLeft:
     mov ah, 2                  ; Function to set cursor position

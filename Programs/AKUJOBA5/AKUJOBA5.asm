@@ -43,8 +43,12 @@ GetCharacter endp
 
 ; Procedure to get the number of trips from the user
 GetTrips PROC
-    MOV trips, 0               ; Initialize trips to 0
+    mov trips, 0               ; Initialize trips to 0
 
+invalidInput:
+    mov dx, OFFSET errorMsg    ; Load error message address
+    call WriteString           ; Write error message to screen
+    jmp getTripsLoop           ; Repeat input prompt
 GetTrips endp
 
 

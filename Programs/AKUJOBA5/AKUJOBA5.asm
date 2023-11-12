@@ -82,6 +82,28 @@ tripLoop:
         inc dl                 ; Increment column number
         cmp dl, 79             ; Compare column number with 79
         jle moveRightLoop      ; Jump if less than or equal to 79
+    
+    ; Move character to the left
+moveLeft:
+    mov ah, 2                  ; Function to set cursor position
+    mov bh, 0                  ; Page number
+    mov dh, 0                  ; Row
+    mov dl, dl                 ; Column
+    int 10h                    ; BIOS video interrupt
+    mov ah, 9                  ; Function to write character
+    mov al, userChar           ; Character to write
+    mov bl, 7                  ; Attribute
+    mov cx, 1                  ; Write one character
+    int 10h                    ; BIOS video interrupt
+    call Delay                 ; Delay to slow down movement
+    dec dl                     ; Move to previous position
+    cmp dl, 0                  ; Check if start of line reached
+    jge moveLeft               ; Loop if not start of line
+
+    dec ch                     ; Decrement trip counter
+    cmp ch, 0                  ; Check if trips are completed
+    jne tripLoop               ; Repeat if not completed
+    ret                        ; Return from procedure
 
 MoveCharacter endp
 

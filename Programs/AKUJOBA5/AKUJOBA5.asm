@@ -61,6 +61,26 @@ invalidInput:
 GetTrips endp
 
 
+; Procedure to move character across the screen
+MoveCharacter PROC
+    MOV CL, trips              ; Number of trips
+    MOV CH, 0                  ; Counter for trips
+
+MoveCharacter ENDP
+
+
+; Delay procedure
+Delay PROC
+
+
+Delay ENDP
+
+
+
+
+
+
+
 ;;_________________________________________________________
 _Exit 0 ; Exit the program with exit code 0
 main    endp    ; End of main procedure

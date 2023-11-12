@@ -69,19 +69,19 @@ tripLoop:
     ; Move character to the right
     mov dl, 0                  ; Position counter
 
-    ; Loop to move character to the right
-    moveRightLoop:
-        mov ah, 2              ; Set function to move cursor
-        mov bh, 0              ; Set page number
-        mov dh, 0              ; Set row number
-        mov dl, dl              ; Set column number
-        int 10h                ; Call interrupt to move cursor
-        mov dl, userChar       ; Load character to move
-        int 21h                ; Call interrupt to write character
-        call Delay             ; Call delay procedure
-        inc dl                 ; Increment column number
-        cmp dl, 79             ; Compare column number with 79
-        jle moveRightLoop      ; Jump if less than or equal to 79
+; Loop to move character to the right
+moveRightLoop:
+    mov ah, 2              ; Set function to move cursor
+    mov bh, 0              ; Set page number
+    mov dh, 0              ; Set row number
+    mov dl, dl              ; Set column number
+    int 10h                ; Call interrupt to move cursor
+    mov dl, userChar       ; Load character to move
+    int 21h                ; Call interrupt to write character
+    call Delay             ; Call delay procedure
+    inc dl                 ; Increment column number
+    cmp dl, 79             ; Compare column number with 79
+    jle moveRightLoop      ; Jump if less than or equal to 79
     
     ; Move character to the left
 moveLeft:
@@ -104,7 +104,6 @@ moveLeft:
     cmp ch, 0                  ; Check if trips are completed
     jne tripLoop               ; Repeat if not completed
     ret                        ; Return from procedure
-
 MoveCharacter endp
 
 

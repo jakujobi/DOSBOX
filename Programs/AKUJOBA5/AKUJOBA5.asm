@@ -78,7 +78,16 @@ Delay ENDP
 
 
 
-
+; Main program
+START:
+    mov ax, @DATA              ; Initialize data segment
+    mov ds, ax
+    call GetCharacter          ; Get character from user
+    call GetTrips              ; Get number of trips from user
+    call MoveCharacter         ; Move character across screen
+    
+    _exit 0                    ; Exit the program with exit code 0
+END START
 
 
 ;;_________________________________________________________

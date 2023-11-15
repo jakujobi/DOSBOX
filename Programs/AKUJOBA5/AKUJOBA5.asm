@@ -18,127 +18,135 @@
 ;; Type and enter:
 ;;     filename.exe
 
+include pcmac.inc  ; Include pcmac.inc file
 .model small  ; Set memory model to small
 .586  ; Target the Intel 586 processor
 .stack 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
 
 .data  ; Start of data segment
-    userChar DB ?
-    trips DB ?
-    promptChar DB 'Enter a character: $'
-    promptTrips DB 'Enter number of trips (1-3): $'
-    errorMsg DB 'Invalid input. Enter a number between 1 and 3.$'
+    userChar db ?      ; srores the character to move
+    trips db ?      ; stores the number of trips
 
-include pcmac.inc  ; Include pcmac.inc file
+    ; Prompt messages
+    promptChar db "Enter a character: ", '$'    ; prompt for character
+    promptTrips DB "Enter number of trips (1-3): ", '$' ; prompt for number of trips
+    errorMsg DB "Invalid input. Enter a number between 1 and 3.", '$'   ; error message
 
-; Procedure to get a single character from the user
+.code
+;extrn GetCh:near  ; External procedure declaration
+extrn GetDec:near
+;_________________________________________________________________________________
+; Get single character from user
+;_________________________________________________________________________________
 GetCharacter proc
-    mov DX, OFFSET promptChar ; Load prompt message address
-    call WriteString           ; Write prompt to screen
-    call ReadChar              ; Read a character from user
-    mov userChar, AL           ; Store the character
+    _PutStr promptChar      ; Write prompt to screen
+    _GetCh                ; Read a character from user
+    mov userChar, al        ; Store the character in userChar
     ret
 GetCharacter endp
 
-
-; Procedure to get the number of trips from the user
+;_________________________________________________________________________________
+; Get the number of trips from the user
+;_________________________________________________________________________________
 GetTrips PROC
     mov trips, 0               ; Initialize trips to 0
 getTripsLoop:
-    mov dx, OFFSET promptTrips ; Load prompt message address
-    call WriteString           ; Write prompt to screen
-    call ReadInt               ; Read integer from user
+    _PutStr promptTrips ; Load prompt message address
+    call GetDec                    ; Get the number of trips from the user
     cmp ax, 1                  ; Compare input with 1
     jl invalidInput            ; Jump if less than 1
     cmp ax, 3                  ; Compare input with 3
     jg invalidInput            ; Jump if greater than 3
-    mov trips, AL              ; Store valid input
+    mov trips, al              ; Store valid input
     ret                        ; Return from procedure
 invalidInput:
-    mov dx, OFFSET errorMsg    ; Load error message address
-    call WriteString           ; Write error message to screen
+    _PutStr errorMsg    ; Load error message address
     jmp getTripsLoop           ; Repeat input prompt
 GetTrips endp
 
+;_________________________________________________________________________________
+; Delay
+;_________________________________________________________________________________
+Delay	PROC
+		push ecx ; save caller's CX
+        push ax ; save caller's AX
+		mov cx,0; loop 65K times
+        mov cx, 0FFFFh             ; Delay length
+delayLoop:
+        nop
+		dec cx
+		jnz delayLoop
+        
+        pop ax ;restore caller's AX
+		pop ecx ;restore caller's CX
+		ret
+Delay	ENDP
 
+;_________________________________________________________________________________
 ; Procedure to move character across the screen
-MoveCharacter proc
+;_________________________________________________________________________________
+PrintCharacter proc
+    push ax
+    push bx
+    push cx
+    push dx
+
     mov cl, trips              ; Number of trips
     mov ch, 0                  ; Counter for trips
 tripLoop:
-    ; Move character to the right
-    mov dl, 0                  ; Position counter
-
-; Loop to move character to the right
-moveRightLoop:
-    mov ah, 2              ; Set function to move cursor
-    mov bh, 0              ; Set page number
-    mov dh, 0              ; Set row number
-    mov dl, dl              ; Set column number
-    int 10h                ; Call interrupt to move cursor
-    mov dl, userChar       ; Load character to move
-    int 21h                ; Call interrupt to write character
-    call Delay             ; Call delay procedure
-    inc dl                 ; Increment column number
-    cmp dl, 79             ; Compare column number with 79
-    jle moveRightLoop      ; Jump if less than or equal to 79
-    
-    
-    ; Move character to the left
-moveLeft:
-    mov ah, 2                  ; Function to set cursor position
-    mov bh, 0                  ; Page number
-    mov dh, 0                  ; Row
-    mov dl, dl                 ; Column
-    int 10h                    ; BIOS video interrupt
-    mov ah, 9                  ; Function to write character
-    mov al, userChar           ; Character to write
-    mov bl, 7                  ; Attribute
-    mov cx, 1                  ; Write one character
-    int 10h                    ; BIOS video interrupt
-    call Delay                 ; Delay to slow down movement
-    dec dl                     ; Move to previous position
-    cmp dl, 0                  ; Check if start of line reached
-    jge moveLeft               ; Loop if not start of line
+    call OneTrip               ; Move character across screen for one trip
 
     dec ch                     ; Decrement trip counter
     cmp ch, 0                  ; Check if trips are completed
     jne tripLoop               ; Repeat if not completed
-    ret                        ; Return from procedure
-MoveCharacter endp
 
-
-; Delay procedure
-Delay proc
-    push ax
-    push cx
-    mov cx, 0FFFFh             ; Delay length
-delayLoop:
-    nop          ;or nope :)   ; No operation (delay)
-    LOOP delayLoop
+    pop dx
     pop cx
+    pop bx
     pop ax
-    ret
-
-Delay endp
-
+    ret                        ; Return from procedure
+PrintCharacter endp
 
 
+;_________________________________________________________________________________
+; One trip accross the screen
+;_________________________________________________________________________________
+OneTrip proc
+    push ax
+    push bx
+    push cx
+    push dx
 
+    mov cx, 79                  ; Lines on screen
+oneLoop:
+    mov dl, userChar        ; Character to move
+    _PutCh                  ; Write character to screen
+    call delay
+    _PutCh 8                    ; Write backspace to screen
+    _PutCh 32                   ; Write space to screen
+    dec cx
+    jnz oneLoop
+	
+    _PutCh 13                  ; Write carriage return to screen
+
+	pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret                        ; Return from procedure
+OneTrip endp
+
+;_________________________________________________________________________________
 ; Main program
-START:
+;_________________________________________________________________________________
+JAKUJ:
     mov ax, @DATA              ; Initialize data segment
     mov ds, ax
     call GetCharacter          ; Get character from user
     call GetTrips              ; Get number of trips from user
-    call MoveCharacter         ; Move character across screen
+    call PrintCharacter         ; Move character across screen
 
     _exit 0                    ; Exit the program with exit code 0
-END START
-
-
-;;_________________________________________________________
-_Exit 0 ; Exit the program with exit code 0
-main    endp    ; End of main procedure
+END JAKUJ
 
 End main

@@ -119,34 +119,34 @@ OneTrip proc
 
     mov cx, 79                  ; Lines on screen
 oneLoop:
-    mov dl, userChar        ; Character to move
-    _PutCh                  ; Write character to screen
+    mov dl, userChar            ; Character to move
+    _PutCh                      ; Write character to screen
     call delay
     _PutCh 8                    ; Write backspace to screen
     _PutCh 32                   ; Write space to screen
     dec cx
     jnz oneLoop
 	
-    _PutCh 13                  ; Write carriage return to screen
+    _PutCh 13                   ; Write carriage return to screen
 
 	pop dx
     pop cx
     pop bx
     pop ax
-    ret                        ; Return from procedure
+    ret                         ; Return from procedure
 OneTrip endp
 
 ;_________________________________________________________________________________
 ; Main program
 ;_________________________________________________________________________________
 JAKUJ:
-    mov ax, @DATA              ; Initialize data segment
+    mov ax, @DATA               ; Initialize data segment
     mov ds, ax
-    call GetCharacter          ; Get character from user
-    call GetTrips              ; Get number of trips from user
+    call GetCharacter           ; Get character from user
+    call GetTrips               ; Get number of trips from user
     call PrintCharacter         ; Move character across screen
 
-    _exit 0                    ; Exit the program with exit code 0
-END JAKUJ
+    _exit 0                     ; Exit the program with exit code 0
+JAKUJ ENDP
 
-End main
+END JAKUJ

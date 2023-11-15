@@ -27,13 +27,11 @@ include pcmac.inc  ; Include pcmac.inc file
     userChar db ?      ; srores the character to move
     trips db ?      ; stores the number of trips
 
-    ; Prompt messages
     promptChar db "Enter a character: ", '$'    ; prompt for character
     promptTrips DB "Enter number of trips (1-3): ", '$' ; prompt for number of trips
     errorMsg DB "Invalid input. Enter a number between 1 and 3.", '$'   ; error message
 
 .code
-;extrn GetCh:near  ; External procedure declaration
 extrn GetDec:near
 ;_________________________________________________________________________________
 ; Get single character from user
@@ -51,8 +49,8 @@ GetCharacter endp
 GetTrips PROC
     mov trips, 0               ; Initialize trips to 0
 getTripsLoop:
-    _PutStr promptTrips ; Load prompt message address
-    call GetDec                    ; Get the number of trips from the user
+    _PutStr promptTrips        ; Load prompt message address
+    call GetDec                ; Get the number of trips from the user
     cmp ax, 1                  ; Compare input with 1
     jl invalidInput            ; Jump if less than 1
     cmp ax, 3                  ; Compare input with 3
@@ -60,7 +58,7 @@ getTripsLoop:
     mov trips, al              ; Store valid input
     ret                        ; Return from procedure
 invalidInput:
-    _PutStr errorMsg    ; Load error message address
+    _PutStr errorMsg           ; Load error message address
     jmp getTripsLoop           ; Repeat input prompt
 GetTrips endp
 
@@ -68,10 +66,10 @@ GetTrips endp
 ; Delay
 ;_________________________________________________________________________________
 Delay	PROC
-		push ecx ; save caller's CX
-        push ax ; save caller's AX
-		mov cx,0; loop 65K times
-        mov cx, 0FFFFh             ; Delay length
+		push ecx                ; save caller's CX
+        push ax                 ; save caller's AX
+		mov cx,0                ; loop 65K times
+        mov cx, 0FFFFh          ; Delay length
 delayLoop:
         nop
 		dec cx
@@ -90,14 +88,13 @@ PrintCharacter proc
     push bx
     push cx
     push dx
-
+    
     mov cl, trips              ; Number of trips
-    mov ch, 0                  ; Counter for trips
 tripLoop:
     call OneTrip               ; Move character across screen for one trip
 
-    dec ch                     ; Decrement trip counter
-    cmp ch, 0                  ; Check if trips are completed
+    dec cl                     ; Decrement trip counter
+    cmp cl, 0                  ; Check if trips are completed
     jne tripLoop               ; Repeat if not completed
 
     pop dx
@@ -106,7 +103,6 @@ tripLoop:
     pop ax
     ret                        ; Return from procedure
 PrintCharacter endp
-
 
 ;_________________________________________________________________________________
 ; One trip accross the screen
@@ -139,10 +135,12 @@ OneTrip endp
 ;_________________________________________________________________________________
 ; Main program
 ;_________________________________________________________________________________
-JAKUJ:
+JAKUJ proc
     mov ax, @DATA               ; Initialize data segment
     mov ds, ax
     call GetCharacter           ; Get character from user
+    _PutCh 10                   ; Write line feed to screen
+    _PutCh 13                   ; Write carriage return to screen
     call GetTrips               ; Get number of trips from user
     call PrintCharacter         ; Move character across screen
 

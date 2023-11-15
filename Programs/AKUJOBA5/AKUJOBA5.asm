@@ -12,40 +12,37 @@
 ;; Navigate to:
 ;;     c:\path\to\asm\file
 ;; Type:
-;;      nasm -f obj filename.asm
+;;      nasm -f obj AKUJOBA5.asm
 ;; Type and enter:
-;;     link filename.obj,,,util
+;;     link AKUJOBA5.obj,,,util
 ;; Type and enter:
-;;     filename.exe
+;;     AKUJOBA5.exe
 
-include pcmac.inc  ; Include pcmac.inc file
-.model small  ; Set memory model to small
-.586  ; Target the Intel 586 processor
-.stack 100h  ; Set stack size to 256 bytes (100h in hexadecimal)
+include pcmac.inc               ; Include pcmac.inc file
+.model small                    ; Set memory model to small
+.586                            ; Target the Intel 586 processor
+.stack 100h                     ; Set stack size to 256 bytes (100h in hexadecimal)
 
-.data  ; Start of data segment
-    userChar db ?      ; srores the character to move
-    trips db ?      ; stores the number of trips
+.data  
+    userChar db ?               ; stores the character to move
+    trips db ?                  ; stores the number of trips
 
-    promptChar db "Enter a character: ", '$'    ; prompt for character
+    promptChar db "Enter a character: ", '$'            ; prompt for character
     promptTrips DB "Enter number of trips (1-3): ", '$' ; prompt for number of trips
     errorMsg DB "Invalid input. Enter a number between 1 and 3.", '$'   ; error message
 
 .code
 extrn GetDec:near
 ;_________________________________________________________________________________
-; Get single character from user
-;_________________________________________________________________________________
+; Get single character from user__________________________________________________
 GetCharacter proc
-    _PutStr promptChar      ; Write prompt to screen
-    _GetCh                ; Read a character from user
-    mov userChar, al        ; Store the character in userChar
+    _PutStr promptChar          ; Write prompt to screen
+    _GetCh                      ; Read a character from user
+    mov userChar, al            ; Store the character in userChar
     ret
 GetCharacter endp
 
-;_________________________________________________________________________________
-; Get the number of trips from the user
-;_________________________________________________________________________________
+; Get the number of trips from the user___________________________________________
 GetTrips PROC
     mov trips, 0               ; Initialize trips to 0
 getTripsLoop:
@@ -62,9 +59,7 @@ invalidInput:
     jmp getTripsLoop           ; Repeat input prompt
 GetTrips endp
 
-;_________________________________________________________________________________
-; Delay
-;_________________________________________________________________________________
+; Delay the program for a while___________________________________________________
 Delay	PROC
 		push ecx                ; save caller's CX
         push ax                 ; save caller's AX
@@ -80,9 +75,7 @@ delayLoop:
 		ret
 Delay	ENDP
 
-;_________________________________________________________________________________
-; Procedure to move character across the screen
-;_________________________________________________________________________________
+; Procedure to move character across the screen___________________________________
 PrintCharacter proc
     push ax
     push bx
@@ -104,9 +97,7 @@ tripLoop:
     ret                        ; Return from procedure
 PrintCharacter endp
 
-;_________________________________________________________________________________
-; One trip accross the screen
-;_________________________________________________________________________________
+; One trip accross the screen_____________________________________________________
 OneTrip proc
     push ax
     push bx
@@ -121,8 +112,7 @@ oneLoop:
     _PutCh 8                    ; Write backspace to screen
     _PutCh 32                   ; Write space to screen
     dec cx
-    jnz oneLoop
-	
+    jnz oneLoop                 ; Repeat until end of line
     _PutCh 13                   ; Write carriage return to screen
 
 	pop dx
@@ -132,9 +122,7 @@ oneLoop:
     ret                         ; Return from procedure
 OneTrip endp
 
-;_________________________________________________________________________________
-; Main program
-;_________________________________________________________________________________
+; Main program ___________________________________________________________________
 JAKUJ proc
     mov ax, @DATA               ; Initialize data segment
     mov ds, ax

@@ -1,9 +1,10 @@
 ; JCAGCD.asm
 ; GCD procedure for calculating the greatest common divisor
-include pcmac.inc               ; Include pcmac.inc file
 .model small
 .586
 .stack 100h
+PUBLIC JCAGCD
+
 
 .code
 ; Procedure to calculate GCD of two numbers in AX and BX
@@ -65,3 +66,5 @@ endGCD:
     ;the GCD is stored in ax
 
 JCAGCD ENDP
+
+end

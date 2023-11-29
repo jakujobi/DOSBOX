@@ -9,6 +9,13 @@ include pcmac.inc               ; Include pcmac.inc file
 ; Procedure to calculate GCD of two numbers in AX and BX
 ; Returns GCD in AX
 JCAGCD PROC
+    ;PUSH AX
+    ;PUSH BX
+    ;PUSH CX
+    PUSH DX
+    PUSH SI
+    PUSH DI
+    PUSH BP
 
     ; Check for zero cases
     cmp ax, 0
@@ -24,31 +31,37 @@ skipNegAX:
     cmp ax, 0
     jg skipNegBX
     neg bx
-
 skipNegBX:
 
-    ; GCD calculation loop
-    gcdLoop:
-        cmp ax, bx
-        je endGCD
-        jg greaterAX
+; GCD calculation loop
+gcdLoop:
+    ; Performing the Euclidean algorithm
+    ;i learned this from stackoverflow
+    xor dx, dx      ; Clear dx for division
+    div bx          ; Divide ax by bx, quotient in ax, remainder in dx
+    mov ax, bx      ; Move the divisor to the dividend's place
+    mov bx, dx      ; Move the remainder to the divisor's place
 
-        ; If BX > AX
-        sub bx, ax
-        jmp gcdLoop
+    cmp bx, 0       ; Check if the remainder is 0
+    jne gcdLoop    ; If not, repeat the loop
+    je endGCD      ; If so, end the loop
 
-    greaterAX:
-        ; If AX > BX
-        sub ax, bx
-        jmp gcdLoop
+zeroCase:
+    ; Handle zero cases
+    mov ax, 0
+    jmp endGCD
 
-    zeroCase:
-        ; Handle zero cases
-        mov ax, 0
-        jmp endGCD
+endGCD:
+    ; Return
+    POP BP
+    POP DI
+    POP SI
+    POP DX
+    ;POP CX
+    ;POP BX
+    ;POP AX
 
-    endGCD:
-        ret
+    ret
+    ;the GCD is stored in ax
+
 JCAGCD ENDP
-
-END JCAGCD

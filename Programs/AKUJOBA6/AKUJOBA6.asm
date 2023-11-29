@@ -9,7 +9,7 @@
 ;; Description: This program tests the GCD procedure. It prompts the user to enter two numbers
 
 include pcmac.inc               ; Include pcmac.inc file
-;include jcagcd.asm              ;Include jcagcd.asm file
+include jcagcd.obj              ;Include jcagcd.asm file
 .model small                    ; Set memory model to small
 .586                            ; Target the Intel 586 processor
 .stack 100h                     ; Set stack size to 256 bytes (100h in hexadecimal)
@@ -27,15 +27,15 @@ include pcmac.inc               ; Include pcmac.inc file
     errorMSGCont db     13, 10, "Whoops!Invalid input. ", 13, 10, "Please type Y or N.", '$'
 
 .code
-;extrn JCAGCD:near             ; External reference to JCAGCD procedure
+extrn JCAGCD:near             ; External reference to JCAGCD procedure
 extrn GetDec:near
 extrn PutDec:near
 
 
 JCAGCD PROC
-    PUSH AX
-    PUSH BX
-    PUSH CX
+    ;PUSH AX
+    ;PUSH BX
+    ;PUSH CX
     PUSH DX
     PUSH SI
     PUSH DI
@@ -51,26 +51,24 @@ JCAGCD PROC
     cmp ax, 0
     jg skipNegAX
     neg ax
-    skipNegAX:
-        cmp ax, 0
-        jg skipNegBX
-        neg bx
-    skipNegBX:
+skipNegAX:
+    cmp ax, 0
+    jg skipNegBX
+    neg bx
+skipNegBX:
 
 ; GCD calculation loop
 gcdLoop:
-    cmp ax, bx
-    je endGCD
-    jg greaterAX
+    ; Performing the Euclidean algorithm
+    ;i learned this from stackoverflow
+    xor dx, dx      ; Clear dx for division
+    div bx          ; Divide ax by bx, quotient in ax, remainder in dx
+    mov ax, bx      ; Move the divisor to the dividend's place
+    mov bx, dx      ; Move the remainder to the divisor's place
 
-    ; If BX > AX
-    sub bx, ax
-    jmp gcdLoop
-
-greaterAX:
-    ; If AX > BX
-    sub ax, bx
-    jmp gcdLoop
+    cmp bx, 0       ; Check if the remainder is 0
+    jne gcdLoop    ; If not, repeat the loop
+    je endGCD      ; If so, end the loop
 
 zeroCase:
     ; Handle zero cases
@@ -78,15 +76,17 @@ zeroCase:
     jmp endGCD
 
 endGCD:
+    ; Return
     POP BP
     POP DI
     POP SI
     POP DX
-    POP CX
-    POP BX
-    POP AX
+    ;POP CX
+    ;POP BX
+    ;POP AX
 
     ret
+    ;the GCD is stored in ax
 
 JCAGCD ENDP
 
@@ -100,10 +100,10 @@ JAKUJ proc
 
     ; Main loop
 mainLoop:
-    mov ax, 0
-    mov bx, 0
-    mov cx, 0
-    mov dx, 0
+    xor ax, ax
+    xor bx, bx
+    xor cx, cx
+    xor dx, dx
 
     _PutStr prompt1            ; Prompt for first number
     call GetDec                ; Read first number
@@ -121,13 +121,12 @@ mainLoop:
 
     ; Display result
 
-    push ax
-    push bx
+    mov cx, ax                 ; Move GCD to cx to avoid it being posibly changed by _PutStr
 
     _PutStr resultMsg
 
-    pop bx
-    pop ax
+    mov ax, cx
+    mov bx, cx
 
     call PutDec               ; Display GCD result
     _PutCh 10                 ; New line
@@ -148,7 +147,6 @@ AskContinue:
 
     _PutStr errorMSGCont
     jmp AskContinue
-    ;jmp mainLoop              ; Repeat main loop
 
 exitLoop:
     _exit 0                   ; Exit program

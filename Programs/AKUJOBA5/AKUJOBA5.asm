@@ -13,7 +13,7 @@
 ;; Navigate to:
 ;;     c:\path\to\asm\file
 ;; Type:
-;;      nasm -f obj AKUJOBA5.asm
+;;      masm  AKUJOBA5.asm 
 ;; Type and enter:
 ;;     link AKUJOBA5.obj,,,util
 ;; Type and enter:

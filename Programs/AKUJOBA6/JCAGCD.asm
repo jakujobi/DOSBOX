@@ -9,19 +9,22 @@ include pcmac.inc               ; Include pcmac.inc file
 ; Procedure to calculate GCD of two numbers in AX and BX
 ; Returns GCD in AX
 JCAGCD PROC
+
+    ; Check for zero cases
     cmp ax, 0
     je zeroCase
     cmp bx, 0
     je zeroCase
 
     ; Convert negative numbers to positive
-    test ax, ax
-    jns skipNegAX
+    cmp ax, 0
+    jg skipNegAX
     neg ax
 skipNegAX:
-    test bx, bx
-    jns skipNegBX
+    cmp ax, 0
+    jg skipNegBX
     neg bx
+
 skipNegBX:
 
     ; GCD calculation loop
@@ -48,4 +51,4 @@ skipNegBX:
         ret
 JCAGCD ENDP
 
-end
+END JCAGCD

@@ -121,11 +121,14 @@ mainLoop:
 
     ; Display result
 
-    mov cx, ax
-    mov dx, bx
+    push ax
+    push bx
+
     _PutStr resultMsg
-    mov ax, cx
-    mov bx, dx
+
+    pop bx
+    pop ax
+
     call PutDec               ; Display GCD result
     _PutCh 10                 ; New line
     _PutCh 13                 ; Carriage return

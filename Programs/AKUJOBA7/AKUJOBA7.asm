@@ -43,11 +43,18 @@ welcomeMsg db 13, 10, "Hi there!", 13, 10,
 nameIsEmptymsg db 13, 10, "Huh!, your name is _...empty? Thats not a name!", 13, 10,
     "Let's try again!", 13, 10, '$'
 
-;;_________________________________________________________
+errorMSGCont db 13, 10, "Whoops!Invalid input. ", 13, 10,
+    "Please type Y or N.", '$' ; Error message for invalid input
+toolongMsg db 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'
+
+promptContinue db 13, 10, "Do you want to continue? (Y/N): ", '$' ; Prompt for continuing the program
+
+;;___________________________________________________________________
 .code  ; Start of code segment
 ;extrn GetDec:near
 ;extrn PutDec:near
 
+; WelcomeMessage procedure prints a welcome message telling the user what to do
 WelcomeMessage proc
     pusha
     _PutStr welcomeMsg
@@ -55,11 +62,29 @@ WelcomeMessage proc
     ret
 WelcomeMessage endp
 
+;;toolong procedure prints an error message if the name is too long
+toolong proc
+    pusha                      ; save all registers
+    _PutStr toolongMsg
+    popa                       ; restore all registers
+    ret
+toolong endp
+
+;;NameIsEmpty procedure prints an error message if the name is empty
+nameIsEmpty proc
+    pusha                       ; save all registers
+    _PutStr nameIsEmptymsg
+    popa                        ; restore all registers
+    ret
+nameIsEmpty endp
+
+
+;_________________________________________________________________________
+
 ;;ReadUsersName procedure gets the name from the user
 ReadUsersName proc
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
     lea di, NameArray           ; Load address of NameArray into di register (d for data)
-
     xor ax,ax                   ; set ax to 0
 readingLoop:
     _GetCh                      ; read a character
@@ -71,45 +96,33 @@ readingLoop:
 
     inc cx                      ; increment the counter
     cmp cx, 80                  ; check if the array is full
-    jge callTooLong                 ; if yes, end reading
+    jge callTooLong             ; if yes, end reading
 
     jmp readingLoop             ; continue reading
-
 callTooLong:
     call toolong                ; call toolong procedure to print an error message
-
 endReading:
-    mov NameLength , cx            ; store the length of the name into length variable
+    mov NameLength , cx         ; store the length of the name into length variable
     ret
-
 ReadUsersName endp
-
-
-;;toolong procedure prints an error message if the name is too long
-toolong proc
-    pusha                      ; save all registers
-    _PutStr 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'
-    popa                       ; restore all registers
-    ret
-toolong endp
 
 
 ;;PrintUsersName procedure prints the name in the form of [LastName, FirstName MiddleName]
 PrintUsersName proc
-    pushad ; save all registers
+    pusha ; save all registers
 
-    xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
-    mov cx, NameLength          ; load the length of the name into cx
-    dec cx                      ; decrement cx by 1
+    xor si, si                  ; we'll set cx to 0 and use as an index for the array (c for counter)
+    mov si, NameLength          ; load the length of the name into cx
+    dec si                      ; decrement cx by 1
 
-    lea di, NameArray           ; Load address of NameArray into di register (d for data)
-    add di, cx                  ; move the pointer to the end of the name
+    lea dx, NameArray           ; Load address of NameArray into di register (d for data)
+    add dx, si                  ; move the pointer to the end of the name
 
 ;Find the last space in the name
 findLastSpace:
-    dec di                      ; Move to the previous character going backwards in the name
-    ;cmp [di], theSpace         ; Compare with space character
-    cmp [di], ' '               ; Compare with space character
+    dec si                      ; Move to the previous character going backwards in the name
+    cmp [dx+si], ' '               ; Compare with space character
+    
     jne findLastSpace           ; If not space, continue searching for space
 
 ;Print the name
@@ -121,37 +134,48 @@ printLastName:
     jne printLastName
 
     _PutStr ", "
-    popad
+    popa
     ret
 PrintUsersName endp
-
-;;NameIsEmpty procedure prints an error message if the name is empty
-nameIsEmpty proc
-    pusha                       ; save all registers
-    _PutStr nameIsEmptymsg
-    popa                        ; restore all registers
-    ret
-nameIsEmpty endp
 
 
 ;;JAKUJ procedure is the main procedure
 JAKUJ    proc
     _Begin
-    
-;programstart:
+    xor bx, bx                  ; set bx to 0
+JAKUJprogramstart:
     call WelcomeMessage
-    ;call ReadUsersName
+    call ReadUsersName
+
+    _PutStr NameArray
 
     ;check if name is empty
-    ;mov bx, NameLength ;
-    ;cmp bx, 0
-    ;jg Notempty
+    mov bx, NameLength ;
+    cmp bx, 0
+    jg Notempty
 
     call nameIsEmpty
-    ;jmp programstart
+    ;;jmp programstart
 
 Notempty:
-    ;call PrintUsersName
+    ;;call PrintUsersName
+
+AskContinue:
+    _PutStr promptContinue      ; Prompt user to continue or exit
+    _GetCh                      ; Get a single character input
+    cmp al, 'N'                 ; Compare input with 'N'
+    je exitLoop             ; Jump to exit if input is 'N'
+    cmp al, 'n'                 ; Compare input with 'n'
+    je exitLoop             ; Jump to exit if input is 'n'
+    cmp al, 'Y'                 ; Compare input with 'Y'
+    je JAKUJprogramstart             ; Jump to main loop if input is 'Y'
+    cmp al, 'y'                 ; Compare input with 'y'
+    je JAKUJprogramstart             ; Jump to main loop if input is 'y'
+
+    _PutStr errorMSGCont        ; Display error message for invalid input
+    jmp AskContinue             ; Jump back to ask continue prompt
+
+exitLoop:
     _Exit 0
 
 JAKUJ    endp    ; End of main procedure called JAKUJ

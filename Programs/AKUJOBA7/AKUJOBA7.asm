@@ -29,8 +29,8 @@ NameLength dw ?                 ; Variable to store the length of the name
 
 ;Characters
 enterKey db 13              ; ASCII code for Enter key
-comma db 44                 ; ASCII value for comma
-theSpace db 32                 ; ASCII value for space    
+;comma db 44                 ; ASCII value for comma
+;theSpace db 32                 ; ASCII value for space    
 
 ;;_________________________________________________________
 .code  ; Start of code segment
@@ -63,7 +63,7 @@ readingLoop:
 
     inc cx                      ; increment the counter
     cmp cx, 80                  ; check if the array is full
-    jge toolong                 ; if yes, end reading
+    jge callTooLongoolong                 ; if yes, end reading
 
     jmp readingLoop             ; continue reading
 
@@ -88,12 +88,33 @@ toolong endp
 
 ;;PrintUsersName procedure prints the name in the form of [LastName, FirstName MiddleName]
 PrintUsersName proc
+    pushad ; save all registers
+
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
     mov cx, NameLength              ; load the length of the name into cx
     dec cx                      ; decrement cx by 1
 
     lea di, NameArray           ; Load address of NameArray into di register (d for data)
+    add di, cx                  ; move the pointer to the end of the name
 
+;Find the last space in the name
+findLastSpace:
+    dec di                      ; Move to the previous character going backwards in the name
+    ;cmp [di], theSpace          ; Compare with space character
+    cmp [di], ' '          ; Compare with space character
+    jne findLastSpace               ; If not space, continue searching for space
+
+;Print the name
+printLastName:
+    mov al, [di]
+    _PutCh al
+    dec di
+    cmp di, 0
+    jne printLastName
+
+    _PutCh comma
+    popad
+    ret
 PrintUsersName endp
 
 ;;NameIsEmpty procedure prints an error message if the name is empty
@@ -109,7 +130,7 @@ nameIsEmpty endp
 JAKUJ    proc
     _Begin
     
-programstart:
+;programstart:
     call ReadUsersName
 
     ;check if name is empty
@@ -118,7 +139,7 @@ programstart:
     jg Notempty
 
     call nameIsEmpty
-    jmp programstart
+    ;jmp programstart
 
 Notempty:
     call PrintUsersName

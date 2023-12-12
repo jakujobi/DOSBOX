@@ -38,17 +38,17 @@ enterKey db 13              ; ASCII code for Enter key
 ;extrn PutDec:near
 
 WelcomeMessage proc
-    _PutStr 13, 10, "Hi there!", 13, 10, "Type your name at the arrow (--->)at the bottom of this message", 13, 10, "Then press enter"
-    _PutStr 13, 10, "* It should be in the form of [FirstName MiddleName LastName]"
-    _PutStr 13, 10, "* No empty names please, and no more than 80 characters"
-    _PutStr 13, 10, "After that, press enter"
-    _PutStr 13, 10, "Thank You!", 13, 10, "--->", 13, 10, '$'
+    _PutStr 13, 10, "Hi there!", 13, 10, 
+            "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
+            "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
+            "* No empty names please, and no more than 80 characters", 13, 10, 
+            "After that, press enter", 13, 10, 
+            "Thank You!", 13, 10, "--->", '$'
     ret
 WelcomeMessage endp
 
 ;;ReadUsersName procedure gets the name from the user
 ReadUsersName proc
-    call WelcomeMessage
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
     lea di, NameArray           ; Load address of NameArray into di register (d for data)
 
@@ -100,9 +100,9 @@ PrintUsersName proc
 ;Find the last space in the name
 findLastSpace:
     dec di                      ; Move to the previous character going backwards in the name
-    ;cmp [di], theSpace          ; Compare with space character
-    cmp [di], ' '          ; Compare with space character
-    jne findLastSpace               ; If not space, continue searching for space
+    ;cmp [di], theSpace         ; Compare with space character
+    cmp [di], ' '               ; Compare with space character
+    jne findLastSpace           ; If not space, continue searching for space
 
 ;Print the name
 printLastName:
@@ -112,7 +112,7 @@ printLastName:
     cmp di, 0
     jne printLastName
 
-    _PutCh comma
+    _PutStr ", "
     popad
     ret
 PrintUsersName endp
@@ -131,18 +131,19 @@ JAKUJ    proc
     _Begin
     
 ;programstart:
-    call ReadUsersName
+    call WelcomeMessage
+    ;call ReadUsersName
 
     ;check if name is empty
-    mov bx, NameLength ;
-    cmp bx, 0
+    ;mov bx, NameLength ;
+    ;cmp bx, 0
     jg Notempty
 
     call nameIsEmpty
     ;jmp programstart
 
 Notempty:
-    call PrintUsersName
+    ;call PrintUsersName
     _Exit 0
 
 JAKUJ    endp    ; End of main procedure called JAKUJ

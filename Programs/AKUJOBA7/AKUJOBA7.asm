@@ -63,7 +63,7 @@ readingLoop:
 
     inc cx                      ; increment the counter
     cmp cx, 80                  ; check if the array is full
-    jge callTooLongoolong                 ; if yes, end reading
+    jge callTooLong                 ; if yes, end reading
 
     jmp readingLoop             ; continue reading
 
@@ -91,7 +91,7 @@ PrintUsersName proc
     pushad ; save all registers
 
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
-    mov cx, NameLength              ; load the length of the name into cx
+    mov cx, NameLength          ; load the length of the name into cx
     dec cx                      ; decrement cx by 1
 
     lea di, NameArray           ; Load address of NameArray into di register (d for data)

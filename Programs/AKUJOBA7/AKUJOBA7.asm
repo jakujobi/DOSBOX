@@ -30,7 +30,18 @@ NameLength dw ?                 ; Variable to store the length of the name
 ;Characters
 enterKey db 13              ; ASCII code for Enter key
 ;comma db 44                 ; ASCII value for comma
-;theSpace db 32                 ; ASCII value for space    
+;theSpace db 32                 ; ASCII value for space  
+
+;Messages
+welcomeMsg db 13, 10, "Hi there!", 13, 10, 
+    "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
+    "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
+    "* No empty names please, and no more than 80 characters", 13, 10, 
+    "After that, press enter", 13, 10, 
+    "Thank You!", 13, 10, "--->", '$'
+
+nameIsEmptymsg db 13, 10, "Huh!, your name is _...empty? Thats not a name!", 13, 10,
+    "Let's try again!", 13, 10, '$'
 
 ;;_________________________________________________________
 .code  ; Start of code segment
@@ -38,12 +49,9 @@ enterKey db 13              ; ASCII code for Enter key
 ;extrn PutDec:near
 
 WelcomeMessage proc
-    _PutStr 13, 10, "Hi there!", 13, 10, 
-            "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
-            "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
-            "* No empty names please, and no more than 80 characters", 13, 10, 
-            "After that, press enter", 13, 10, 
-            "Thank You!", 13, 10, "--->", '$'
+    pusha
+    _PutStr welcomeMsg
+    popa
     ret
 WelcomeMessage endp
 
@@ -79,9 +87,9 @@ ReadUsersName endp
 
 ;;toolong procedure prints an error message if the name is too long
 toolong proc
-    pushad                      ; save all registers
+    pusha                      ; save all registers
     _PutStr 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'
-    popad                       ; restore all registers
+    popa                       ; restore all registers
     ret
 toolong endp
 
@@ -119,9 +127,9 @@ PrintUsersName endp
 
 ;;NameIsEmpty procedure prints an error message if the name is empty
 nameIsEmpty proc
-    pushad                      ; save all registers
-    _PutStr 13, 10, "Huh!, your name is _...empty? Thats not a name!", 13, 10, "Let's try again!", 13, 10, '$'
-    popad                       ; restore all registers
+    pusha                       ; save all registers
+    _PutStr nameIsEmptymsg
+    popa                        ; restore all registers
     ret
 nameIsEmpty endp
 
@@ -137,7 +145,7 @@ JAKUJ    proc
     ;check if name is empty
     ;mov bx, NameLength ;
     ;cmp bx, 0
-    jg Notempty
+    ;jg Notempty
 
     call nameIsEmpty
     ;jmp programstart

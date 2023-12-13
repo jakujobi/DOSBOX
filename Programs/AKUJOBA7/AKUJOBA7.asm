@@ -123,7 +123,14 @@ getLastSpace:
     mov al, [dx+si]             ; Move to the previous character going backwards in the name
     cmp al, ' '                 ; Compare with space character
     je printLastName            ; If space, print the last name
-    jne getLastSpace           ; If not space, continue searching for space
+    test ax, ax                 ; Perform bitwise AND on AX with itself
+    jz nameWithoutSpace         ; Jump to Zero if the result is 0
+
+    dec si                      ; Decrement si by 1
+    cmp si, 0                   ; Compare si with 0
+    je printLastName            ; Jump to nameWithoutSpace if si is 0
+
+    jmp getLastSpace            ; If not space, continue searching for space
 
 ;Print the name
 printLastName:

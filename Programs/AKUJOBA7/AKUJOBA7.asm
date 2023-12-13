@@ -111,19 +111,19 @@ ReadUsersName endp
 PrintUsersName proc
     pusha ; save all registers
 
-    xor si, si                  ; we'll set cx to 0 and use as an index for the array (c for counter)
-    mov si, NameLength          ; load the length of the name into cx
-    dec si                      ; decrement cx by 1
+    xor si, si                  ; we'll set si to 0 and use as an index for the array (c for counter)
+    mov si, NameLength          ; load the length of the name into si
+    dec si                      ; decrement si by 1
 
     lea dx, NameArray           ; Load address of NameArray into di register (d for data)
-    add dx, si                  ; move the pointer to the end of the name
+    ;add dx, si                 ; move the pointer to the end of the name
 
 ;Find the last space in the name
-findLastSpace:
-    dec si                      ; Move to the previous character going backwards in the name
-    cmp [dx+si], ' '               ; Compare with space character
-    
-    jne findLastSpace           ; If not space, continue searching for space
+getLastSpace:
+    mov al, [dx+si]             ; Move to the previous character going backwards in the name
+    cmp al, ' '                 ; Compare with space character
+    je printLastName            ; If space, print the last name
+    jne getLastSpace           ; If not space, continue searching for space
 
 ;Print the name
 printLastName:

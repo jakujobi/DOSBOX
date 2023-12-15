@@ -27,12 +27,8 @@ include pcmac.inc           ; Include pcmac.inc file
 NameArray db 80 dup(?)      ; Array to store the name, max 80 characters
 NameLength dw ?                 ; Variable to store the length of the name
 
-;Characters
+;Characters & Messages
 enterKey db 13              ; ASCII code for Enter key
-;comma db 44                 ; ASCII value for comma
-;theSpace db 32                 ; ASCII value for space  
-
-;Messages
 welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10, 
     "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
@@ -189,16 +185,13 @@ PrintUsersName endp
 
 ; Delay the program for a while___________________________________________________
 Delay	PROC
-    push ecx                    ; save caller's CX
-    push ax                     ; save caller's AX
-    mov cx, 0FFFFh              ; Delay length (Learned this from stack overflow)
+    pusha
+    mov cx, 0FFFFh                      ; Delay length (Learned this from stack overflow)
     delayLoop:
         nop
 		dec cx
 		jnz delayLoop
-        
-    pop ax                      ;restore caller's AX
-    pop ecx                     ;restore caller's CX
+    popa
     ret
 Delay	ENDP
 

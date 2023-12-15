@@ -33,6 +33,7 @@ welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10,
     "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
     "* No empty names please, and no more than 80 characters", 13, 10, 
+    "* Put in alphabets only, no numbers or characters except for spaces and hyphens", 13, 10, 
     "After that, press enter", 13, 10, "Thank You!", 13, 10, "--->", '$'
 nameIsEmptymsg db 13, 10, "Huh! your name is ...empty? Thats not a name!", 13, 10,
     "Let's try again!", 13, 10, '$'
@@ -98,15 +99,38 @@ printBorderline endp
 ;;ReadUsersName procedure gets the name from the user
 ReadUsersName proc
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
-    lea di, NameArray           ; Load address of NameArray into di register (d for data)
-    xor ax,ax                   ; set ax to 0
+    lea bx, NameArray           ; Load address of NameArray into di register (d for data)
+    xor al,al                   ; set ax to 0
+    xor si, si ; set si to 0
 readingLoop:
     _GetCh                      ; read a character
     cmp al, enterKey            ; check if enter key is pressed (register a has the character)
     je endReading               ; if yes, end reading
 
-    mov [di], al                ; store the character in the array
-    add di, 1                   ; increment the pointer
+checkingCharacter: ; Check if the character is a letter or a space
+    cmp al, ' '                 ; check if it's a space
+    je storeCharacter           ; if yes, store it
+    cmp al, '-'                 ; check if it's a space
+    je storeCharacter           ; if yes, store it
+    cmp al, 'A'                 ; check if it's a letter (upper case)
+    jl notACharacter            ; if less than 'A', it's not a letter
+    cmp al, 'Z'                 ; check if it's a letter (upper case)
+    jg checkLowerCase           ; if greater than 'Z', check if it's a lower case letter
+    jmp storeCharacter
+
+checkLowerCase:
+    cmp al, 'a'                 ; check if it's a letter (lower case)
+    jl notACharacter            ; if less than 'a', it's not a letter
+    cmp al, 'z'                 ; check if it's a letter (lower case)
+    jg notACharacter            ; if greater than 'z', it's not a letter
+    jmp storeCharacter          ; if it's a letter, store it
+
+notACharacter:
+    jmp readingLoop             ; if it's not a letter or a space, ignore it and read the next character
+
+storeCharacter:
+    mov [bx+si], al             ; store the character in the array
+    inc si                      ; increment the pointer
 
     inc cx                      ; increment the counter
     cmp cx, 80                  ; check if the array is full
@@ -239,6 +263,9 @@ Notempty:
     _PutCh 10                   ; Print a new line
     call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
     call printBorderline        ; Print a borderline
+
+    _PutStr NameArray           ; Print the name stored in NameArray
+
     jmp AskContinue             ; Ask the user if they want to continue
 
 AskContinue:

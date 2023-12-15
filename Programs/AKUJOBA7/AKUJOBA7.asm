@@ -33,7 +33,7 @@ enterKey db 13              ; ASCII code for Enter key
 ;theSpace db 32                 ; ASCII value for space  
 
 ;Messages
-welcomeMsg db 13, 10, "Hi there!", 13, 10, 
+welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10, 
     "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
     "* No empty names please, and no more than 80 characters", 13, 10, 
@@ -59,6 +59,8 @@ theSpace db " ", '$',
 ;extrn PutDec:near
 
 ;;Printing Procedures, subroutines: I made these to avoid accidentally overwriting registers when i us _PutStr
+;The procedures push all the registers onto the stack, call the _PutStr function,
+;and then pops all the registers from the stack before returning.
 
 ; WelcomeMessage procedure prints a welcome message telling the user what to do
 WelcomeMessage proc
@@ -137,34 +139,31 @@ PrintUsersName proc
     xor si, si                  ; we'll set si to 0 and use as an index for the array (c for counter)
     mov si, NameLength          ; load the length of the name into si
     dec si                      ; decrement si by 1
-
-    lea bx, NameArray           ; Load address of NameArray into di register (d for data)
-    ;add dx, si                 ; move the pointer to the end of the name
+    lea bx, NameArray           ; Load address of NameArray into di register 
 
 ;Find the last space in the name
 getLastSpace:
-    mov al, [bx + si]             ; Move to the previous character going backwards in the name
-    cmp al, ' '                 ; Compare with space character
     mov cx, si                  ; Move si to cx (saving it to print the rest of the names in printingOtherNames)
+    mov al, [bx + si]           ; Move to the previous character going backwards in the name
+    cmp al, ' '                 ; Compare with space character
     je printLastName            ; If space, print the last name
-    test ax, ax                 ; Perform bitwise AND on AX with itself
-    jz singleWordName           ; Jump to Zero if the result is 0
 
     dec si                      ; Decrement si by 1
     cmp si, 0                   ; Compare si with 0
-    je printLastName            ; Jump to singleWordName if si is 0
+    je singleWordName            ; Jump to singleWordName if si is 0
 
     jmp getLastSpace            ; If not space, continue searching for space
 
 ;Print the name
 printLastName:
     mov si, cx                          ; Print from where we left off
+    inc si                              ; Decrement si by 1
 actualPrintLastName:
     mov al, [bx + si]                   ; Move to the first character in the last name
     _PutCh al                           ; Print the first character
     inc si
     cmp si, NameLength                  ; Compare si with 0
-    jne actualPrintLastName             ; Restart the loop if si has not reached the end of the name
+    jle actualPrintLastName             ; Restart the loop if si has not reached the end of the name
     call printCommmaSpace               ; Print a comma and a space
     jmp printingOtherNames              ; GO on to printing other names
 
@@ -174,7 +173,7 @@ actualPrintingSingleWordName:
     mov al, [bx + si]                   ; Move to the first character in the single word name
     _PutCh al                           ; Print the first character
     add si, 1                           ; Increment si by 1
-    cmp si, NameLength                  ; Compare si with 0
+    cmp si, NameLength                  ; Compare si with the length of the name
     jne actualPrintingSingleWordName    ; Restart the loop if si is not equal to the length of the name
     jmp endPrintingName                 ; Jump to endPrintingName
 
@@ -202,7 +201,7 @@ JAKUJprogramstart:
     call WelcomeMessage
     call ReadUsersName
 
-    _PutStr NameArray
+    ;_PutStr NameArray
 
     ;check if name is empty
     mov bx, NameLength ;
@@ -210,11 +209,13 @@ JAKUJprogramstart:
     jg Notempty
 
     call nameIsEmpty
+    jmp AskContinue
 
 Notempty:
     call PrintUsersName
 
 AskContinue:
+    xor al, al                  ; Clear al register
     _PutStr promptContinue      ; Prompt user to continue or exit
     _GetCh                      ; Get a single character input
     cmp al, 'N'                 ; Compare input with 'N'

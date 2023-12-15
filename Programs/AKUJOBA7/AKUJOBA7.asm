@@ -1,22 +1,48 @@
+; ==========================================================================================
 ;; Name: John Akujobi
 ;; Class: CSC 314
-;; Assign: Assignment #
-;; Due: ##, 2023
+;; Assign: Assignment 7
+;; Due: Dec 15, 2023
+; Description:
+;   This Assembly program reads a person's full name and reformats it to display in the order
+;   of lastname, firstname [middle name(s)]. It handles various name structures, including 
+;   single names, names without middle names, and names with multiple middle names.
+;
+;   The program consists of two main parts:
+;     - ReadingNameOfUser: A procedure to read the user's full name up to 80 characters
+;       long, storing the characters in an array, and counting the number of characters entered.
+;     - PrintNameOfUser: A procedure to process and print the name in the desired format.
+;
+;   Example Input: John Barley Smithson
+;   Example Output: Smithson, John Barley
+;
+; Key Features:
+;   - The program can handle names with zero or more middle names.
+;   - It is capable of managing various test cases, including single names, empty input,
+;     names with no middle names, and names with multiple middle names.
+;   - Efficient string manipulation techniques are employed to reorder the name components.
+;
+; Usage:
+;   - Run the program and enter a full name when prompted.
+;   - The program will output the reformatted name in the specified order.
+;
+; Testing:
+;   - The program has been thoroughly tested with different name formats to ensure robustness
+;     and accuracy in name reformatting.
+; ==========================================================================================
 
-;; Description:
-;;
-;;
 
 ;;To Run
 ;; Open DosBox
 ;; Navigate to:
 ;;     c:\path\to\asm\file
 ;; Type:
-;;      nasm -f obj filename.asm
+;;      nasm -f obj AKUJOBIA7.asm
 ;; Type and enter:
-;;     link filename.obj,,,util
+;;     link AKUJOBIA7.obj,,,util
 ;; Type and enter:
-;;     filename.exe
+;;     AKUJOBIA7.exe
+;; (Note: Ensure the PCMAC.INC and UTIL.LIB files are in the same directory)
 
 include pcmac.inc           ; Include pcmac.inc file
 .model small                ; Set memory model to small
@@ -318,3 +344,66 @@ exitLoop:
 JAKUJ    endp                   ; End of main procedure called JAKUJ
 
 End JAKUJ                       ; End of program
+
+
+; ==========================================================================================
+;; Name: John Akujobi
+;; Class: CSC 314
+;; Assign: Assignment 7
+;; Due: Dec 15, 2023
+; Description:
+;   This Assembly program reads a person's full name and reformats it to display in the order
+;   of lastname, firstname [middle name(s)]. It handles various name structures, including 
+;   single names, names without middle names, and names with multiple middle names.
+;
+;   The program consists of two main parts:
+;     - ReadingNameOfUser: A procedure to read the user's full name up to 80 characters
+;       long, storing the characters in an array, and counting the number of characters entered.
+;     - PrintNameOfUser: A procedure to process and print the name in the desired format.
+;
+;   Example Input: John Barley Smithson
+;   Example Output: Smithson, John Barley
+;
+; Key Features:
+;   - The program can handle names with zero or more middle names.
+;   - It is capable of managing various test cases, including single names, empty input,
+;     names with no middle names, and names with multiple middle names.
+;   - Efficient string manipulation techniques are employed to reorder the name components.
+;
+; Usage:
+;   - Run the program and enter a full name when prompted.
+;   - The program will output the reformatted name in the specified order.
+;
+; Testing:
+;   - The program has been thoroughly tested with different name formats to ensure robustness
+;     and accuracy in name reformatting.
+;
+; ==========================================================================================
+; Program Overview:
+; - The program reads a user's full name and then displays it with the last name first,
+;   followed by a comma, the first name, and any middle names.
+; - The name's components are separated by spaces, and the program identifies the last name
+;   as the word after the last space in the input.
+
+; Functionality:
+; - Name Input: Prompts the user to enter their full name, storing up to 80 characters.
+; - Name Processing: Analyzes the entered name to identify and isolate the last name.
+; - Reformatting Output: Prints the name in the format 'Lastname, Firstname [Middlename(s)]'.
+; - Input Validation: Ensures the name does not exceed the maximum length and handles empty input.
+
+; Technical Details:
+; - The program is optimized for x86 Assembly, suitable for DOS-like environments.
+; - Employs string manipulation techniques for processing the entered name.
+; - Uses stack-based logic for storing and accessing the name data.
+
+; User Interaction:
+; - The user is prompted to enter their full name upon program start.
+; - The reformatted name is displayed according to the specified format.
+; - Handles a variety of name formats, including complex names with multiple components.
+
+; Limitations and Considerations:
+; - Designed for environments where direct memory access and stack manipulation are supported.
+; - Assumes name components are separated by spaces and does not handle special characters.
+; - The maximum name length is set to 80 characters; longer names are truncated.
+; - The program assumes that the last name is the first word after the last space in the input.
+; ==========================================================================================

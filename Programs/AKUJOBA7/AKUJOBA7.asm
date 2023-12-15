@@ -40,7 +40,7 @@ welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10,
     "After that, press enter", 13, 10, 
     "Thank You!", 13, 10, "--->", '$'
 
-nameIsEmptymsg db 13, 10, "Huh!, your name is _...empty? Thats not a name!", 13, 10,
+nameIsEmptymsg db 13, 10, "Huh! your name is ...empty? Thats not a name!", 13, 10,
     "Let's try again!", 13, 10, '$'
 
 errorMSGCont db 13, 10, "Whoops!Invalid input. ", 13, 10,
@@ -51,12 +51,10 @@ promptContinue db 13, 10, "Do you want to continue? (Y/N): ", '$' ; Prompt for c
 
 comma db ", ", '$'
 
-theSpace db " ", '$',
+borderline db 13, 10, 76 dup("_"), 13, 10, '$'
 
 ;;___________________________________________________________________
 .code  ; Start of code segment
-;extrn GetDec:near
-;extrn PutDec:near
 
 ;;Printing Procedures, subroutines: I made these to avoid accidentally overwriting registers when i us _PutStr
 ;The procedures push all the registers onto the stack, call the _PutStr function,
@@ -95,13 +93,12 @@ printCommmaSpace proc
 printCommmaSpace endp
 
 ;;printSpace procedure prints a space
-printSpace proc
+printBorderline proc
     pusha
-    _PutStr theSpace
+    _PutStr borderline
     popa
     ret
-printSpace endp
-
+printBorderline endp
 
 
 ;_________________________________________________________________________
@@ -150,7 +147,7 @@ getLastSpace:
 
     dec si                      ; Decrement si by 1
     cmp si, 0                   ; Compare si with 0
-    je singleWordName            ; Jump to singleWordName if si is 0
+    je singleWordName           ; Jump to singleWordName if si is 0
 
     jmp getLastSpace            ; If not space, continue searching for space
 
@@ -164,11 +161,13 @@ actualPrintLastName:
     inc si
     cmp si, NameLength                  ; Compare si with 0
     jle actualPrintLastName             ; Restart the loop if si has not reached the end of the name
+
+    _PutCh 8                            ; Print a backspace (learned from Assignment 5)
     call printCommmaSpace               ; Print a comma and a space
     jmp printingOtherNames              ; GO on to printing other names
 
 singleWordName:
-    xor si, si                           ; Starting at the beginning of the single word name
+    xor si, si                          ; Starting at the beginning of the single word name
 actualPrintingSingleWordName:       
     mov al, [bx + si]                   ; Move to the first character in the single word name
     _PutCh al                           ; Print the first character
@@ -188,8 +187,8 @@ actualPrintingOtherNames:
     jmp endPrintingName                 ; Jump to endPrintingName
 
 endPrintingName:
-    popa
-    ret
+    popa                                ; Restore all registers
+    ret                                 ; Return
 PrintUsersName endp
 
 
@@ -198,42 +197,46 @@ JAKUJ    proc
     _Begin
     xor bx, bx                  ; set bx to 0
 JAKUJprogramstart:
-    call WelcomeMessage
-    call ReadUsersName
+    call printBorderline        ; Print a borderline
+    call printBorderline        ; Print a borderline
+    call WelcomeMessage         ; Tell the user what to do
+    call ReadUsersName          ; Read the name
+    call printBorderline        ; Print a borderline
 
-    ;_PutStr NameArray
 
     ;check if name is empty
-    mov bx, NameLength ;
-    cmp bx, 0
-    jg Notempty
+    mov bx, NameLength ;        ; Load the length of the name into bx
+    cmp bx, 0                   ; Compare bx with 0
+    jg Notempty                 ; Jump to Notempty if bx is greater than 0
 
-    call nameIsEmpty
-    jmp AskContinue
+    call nameIsEmpty            ; Print an error message if the name is empty
+    call printBorderline        ; Print a borderline
+    jmp AskContinue             ; Ask the user if they want to continue
 
 Notempty:
-    call PrintUsersName
+    call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
+    call printBorderline        ; Print a borderline
+    jmp AskContinue             ; Ask the user if they want to continue
 
 AskContinue:
     xor al, al                  ; Clear al register
     _PutStr promptContinue      ; Prompt user to continue or exit
     _GetCh                      ; Get a single character input
-    cmp al, 'N'                 ; Compare input with 'N'
-    je exitLoop             ; Jump to exit if input is 'N'
-    cmp al, 'n'                 ; Compare input with 'n'
-    je exitLoop             ; Jump to exit if input is 'n'
-    cmp al, 'Y'                 ; Compare input with 'Y'
-    je JAKUJprogramstart             ; Jump to main loop if input is 'Y'
-    cmp al, 'y'                 ; Compare input with 'y'
-    je JAKUJprogramstart             ; Jump to main loop if input is 'y'
+    cmp al, 'N'                 ; 
+    je exitLoop                 ; Jump to exit if input is 'N'
+    cmp al, 'n'                 ; 
+    je exitLoop                 ; Jump to exit if input is 'n'
+    cmp al, 'Y'                 ; 
+    je JAKUJprogramstart        ; Jump to main loop if input is 'Y'
+    cmp al, 'y'                 ; 
+    je JAKUJprogramstart        ; Restart the program if input is 'y'
 
     _PutStr errorMSGCont        ; Display error message for invalid input
     jmp AskContinue             ; Jump back to ask continue prompt
 
 exitLoop:
-    _Exit 0
+    _Exit 0                     ; Exit program with status 0
 
-JAKUJ    endp    ; End of main procedure called JAKUJ
+JAKUJ    endp                   ; End of main procedure called JAKUJ
 
-End JAKUJ
-
+End JAKUJ                       ; End of program

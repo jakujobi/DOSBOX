@@ -183,6 +183,7 @@ printLastName:
 actualPrintLastName:
     mov al, [bx + si]                   ; Move to the first character in the last name
     _PutCh al                           ; Print the first character
+    call Delay
     inc si
     cmp si, NameLength                  ; Compare si with 0
     jle actualPrintLastName             ; Restart the loop if si has not reached the end of the name
@@ -194,6 +195,7 @@ actualPrintLastName:
 printSingleLetter:
     mov al, [bx]                ; Move to the first character in the name
     _PutCh al                   ; Print the character
+    call Delay
     jmp endPrintingName         ; Jump to endPrintingName
 
 singleWordName:
@@ -201,6 +203,7 @@ singleWordName:
 actualPrintingSingleWordName:       
     mov al, [bx + si]                   ; Move to the first character in the single word name
     _PutCh al                           ; Print the first character
+    call Delay
     add si, 1                           ; Increment si by 1
     cmp si, NameLength                  ; Compare si with the length of the name
     jne actualPrintingSingleWordName    ; Restart the loop if si is not equal to the length of the name
@@ -211,6 +214,7 @@ printingOtherNames:
 actualPrintingOtherNames:
     mov al, [bx + si]                   ; Move to the first character in the name
     _PutCh al                           ; Print the first character
+    call Delay
     inc si                              ; Increment si by 1
     cmp si, cx                          ; Check if we reached the position we stopped at in the last name
     jne actualPrintingOtherNames        ; Restart the loop if si is not equal to the length of the name
@@ -278,7 +282,7 @@ Notempty:
     call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
     call printBorderline        ; Print a borderline
 
-    ;_PutStr NameArray           ; Print the name stored in NameArray (for testing purposes)
+    ;_PutStr NameArray           ; Print the name stored in NameArray (for testing)
 
     jmp AskContinue             ; Ask the user if they want to continue
 

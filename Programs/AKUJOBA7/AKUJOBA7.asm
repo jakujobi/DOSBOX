@@ -138,12 +138,12 @@ PrintUsersName proc
     mov si, NameLength          ; load the length of the name into si
     dec si                      ; decrement si by 1
 
-    lea dx, NameArray           ; Load address of NameArray into di register (d for data)
+    lea bx, NameArray           ; Load address of NameArray into di register (d for data)
     ;add dx, si                 ; move the pointer to the end of the name
 
 ;Find the last space in the name
 getLastSpace:
-    mov al, [dx+si]             ; Move to the previous character going backwards in the name
+    mov al, [bx + si]             ; Move to the previous character going backwards in the name
     cmp al, ' '                 ; Compare with space character
     mov cx, si                  ; Move si to cx (saving it to print the rest of the names in printingOtherNames)
     je printLastName            ; If space, print the last name
@@ -210,10 +210,9 @@ JAKUJprogramstart:
     jg Notempty
 
     call nameIsEmpty
-    ;;jmp programstart
 
 Notempty:
-    ;;call PrintUsersName
+    call PrintUsersName
 
 AskContinue:
     _PutStr promptContinue      ; Prompt user to continue or exit

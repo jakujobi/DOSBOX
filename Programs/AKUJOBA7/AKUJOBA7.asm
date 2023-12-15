@@ -243,6 +243,7 @@ JAKUJprogramstart:
     jmp AskContinue             ; Ask the user if they want to continue
 
 Notempty:
+    _PutCh 10                   ; Print a new line
     call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
     call printBorderline        ; Print a borderline
     jmp AskContinue             ; Ask the user if they want to continue

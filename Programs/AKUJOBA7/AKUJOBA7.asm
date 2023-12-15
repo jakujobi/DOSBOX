@@ -59,10 +59,10 @@ welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10,
     "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
     "* No empty names please, and no more than 80 characters", 13, 10, 
-    "* Put in alphabets only, no numbers or characters except for spaces and hyphens", 13, 10, 
+    "* Put in letters only, no numbers or characters except for spaces and hyphens", 13, 10, 
     "After typing your name, press enter", 13, 10, "Thank You!", 13, 10, "--->", '$'
-nameIsEmptymsg db 13, 10, "Huh! your name is ...empty? Thats not a name!", 13, 10,
-    "Let's try again!", 13, 10, '$'
+nameIsEmptymsg db 13, 10, "Huh! your name is...empty? Thats not a name!", 13, 10,
+    "Remember to type your name (Letters, spaces and hyphens only) and press enter", 13, 10, "Let's try again!", 13, 10, '$'
 errorMSGCont db 13, 10, "Whoops!Invalid input. ", 13, 10,
     "Please type Y or N.", '$' ; Error message for invalid input
 toolongMsg db 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'

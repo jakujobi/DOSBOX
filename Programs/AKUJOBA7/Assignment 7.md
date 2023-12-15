@@ -25,7 +25,7 @@ You will then need to start at the right end of the name and search backwards fo
 
 At this point, you can now print out the last name, a comma, and go back to the beginning of the array and print the rest of the name.
 
-Make sure to properly test you program before submitting it.
+Make sure to properly test your program before submitting it.
 
 You should test single names such as:
 

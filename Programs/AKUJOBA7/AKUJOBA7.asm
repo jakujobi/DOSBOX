@@ -89,17 +89,17 @@ WelcomeMessage endp
 
 ;;toolong procedure prints an error message if the name is too long
 toolong proc
-    pusha                      ; save all registers
+    pusha                      
     _PutStr toolongMsg
-    popa                       ; restore all registers
+    popa                      
     ret
 toolong endp
 
 ;;NameIsEmpty procedure prints an error message if the name is empty
 nameIsEmpty proc
-    pusha                       ; save all registers
+    pusha                       
     _PutStr nameIsEmptymsg
-    popa                        ; restore all registers
+    popa                        
     ret
 nameIsEmpty endp
 
@@ -126,15 +126,15 @@ printBorderline endp
 ReadUsersName proc
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
     lea bx, NameArray           ; Load address of NameArray into di register (d for data)
-    mov [bx - 1], ' '           
+    mov [bx - 1], ' '           ; put a space before the beginning of the array
     xor al,al                   ; set ax to 0
-    xor si, si ; set si to 0
+    xor si, si                  ; set si to 0
 readingLoop:
     _GetCh                      ; read a character
     cmp al, enterKey            ; check if enter key is pressed (register a has the character)
     je endReading               ; if yes, end reading
 
-checkingCharacter: ; Check if the character is a letter or a space
+checkingCharacter:              ; Check if the character is a letter or a space
     cmp al, ' '                 ; check if it's a space
     je storeCharacter           ; if yes, store it
     cmp al, '-'                 ; check if it's a space
@@ -156,7 +156,7 @@ notACharacter:
     jmp readingLoop             ; if it's not a letter or a space, ignore it and read the next character
 
 storeCharacter:
-    mov [bx + si], al             ; store the character in the array
+    mov [bx + si], al           ; store the character in the array
     inc si                      ; increment the pointer
 
     inc cx                      ; increment the counter
@@ -167,8 +167,7 @@ storeCharacter:
 callTooLong:
     call toolong                ; call toolong procedure to print an error message
 endReading:
-    mov [bx + si], '$'           ; store the null character at the end of the array
-    ;mov [bx + si + 1], '$'           ; store the null character at the end of the array
+    mov [bx + si], '$'          ; store the null character at the end of the array
     mov NameLength , cx         ; store the length of the name into length variable
     ret
 ReadUsersName endp
@@ -176,7 +175,7 @@ ReadUsersName endp
 
 ;;PrintUsersName procedure prints the name in the form of [LastName, FirstName MiddleName]
 PrintUsersName proc
-    pusha ; save all registers
+    pusha                       ; save all registers
 
     xor si, si                  ; we'll set si to 0 and use as an index for the array (c for counter)
     mov si, NameLength          ; load the length of the name into si
@@ -186,7 +185,7 @@ PrintUsersName proc
     dec si                      ; decrement si by 1
 
     ; Check if the name is a single letter
-    cmp [bx + 1], '$'                   ; Compare si with 0
+    cmp [bx + 1], '$'           ; Compare si with $
     je printSingleLetter        ; If si is 0, jump to printSingleLetter
 
 ;Find the last space in the name
@@ -204,19 +203,19 @@ getLastSpace:
 
 ;Print the name
 printLastName:
-    mov si, cx                          ; Print from where we left off
-    inc si                              ; Decrement si by 1
+    mov si, cx                  ; Print from where we left off
+    inc si                      ; Decrement si by 1
 actualPrintLastName:
-    mov al, [bx + si]                   ; Move to the first character in the last name
-    _PutCh al                           ; Print the first character
+    mov al, [bx + si]           ; Move to the first character in the last name
+    _PutCh al                   ; Print the first character
     call Delay
     inc si
-    cmp si, NameLength                  ; Compare si with 0
-    jle actualPrintLastName             ; Restart the loop if si has not reached the end of the name
+    cmp si, NameLength          ; Compare si with 0
+    jle actualPrintLastName     ; Restart the loop if si has not reached the end of the name
 
-    _PutCh 8                            ; Print a backspace (learned from Assignment 5)
-    call printCommmaSpace               ; Print a comma and a space
-    jmp printingOtherNames              ; GO on to printing other names
+    _PutCh 8                    ; Print a backspace (learned from Assignment 5)
+    call printCommmaSpace       ; Print a comma and a space
+    jmp printingOtherNames      ; GO on to printing other names
 
 printSingleLetter:
     mov al, [bx]                ; Move to the first character in the name
@@ -265,16 +264,16 @@ Delay	ENDP
 
 printEasterEgg proc
     call printBorderline
-    pusha                          ; Restore all registers
-    lea bx, easterEgg             ; Load address of easterEgg
-    xor si, si
+    pusha                       ; Restore all registers
+    lea bx, easterEgg           ; Load address of easterEgg
+    xor si, si                  ; Set si to 0 to get the first character in the easterEgg
 easterLoop:
-    mov al, [bx + si]
-    call Delay
-    _PutCh al
-    inc si
-    cmp si, 75
-    jl easterLoop ; Restart the loop 
+    mov al, [bx + si]              
+    call Delay                  ; Delay
+    _PutCh al                   ; Print the character
+    inc si                      ; Increment si by 1
+    cmp si, 75                  ; Check if we reached the end of the easterEgg
+    jl easterLoop               ; Restart the loop 
 
     call printBorderline
 
@@ -308,7 +307,7 @@ Notempty:
     call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
     call printBorderline        ; Print a borderline
 
-    ;_PutStr NameArray           ; Print the name stored in NameArray (for testing)
+    ;_PutStr NameArray          ; Print the name stored in NameArray (for testing)
 
     jmp AskContinue             ; Ask the user if they want to continue
 
@@ -334,9 +333,9 @@ AskContinue:
     jmp AskContinue             ; Jump back to ask continue prompt
 
 EasterChristmas:
-    call printBorderline
-    call printEasterEgg
-    jmp exitLoop
+    call printBorderline        ; Print a borderline
+    call printEasterEgg         ; Print the easter egg
+    jmp exitLoop                ; go to exit loop
 
 exitLoop:
     _Exit 0                     ; Exit program with status 0

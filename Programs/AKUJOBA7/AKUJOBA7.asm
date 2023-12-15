@@ -34,7 +34,7 @@ welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10,
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
     "* No empty names please, and no more than 80 characters", 13, 10, 
     "* Put in alphabets only, no numbers or characters except for spaces and hyphens", 13, 10, 
-    "After that, press enter", 13, 10, "Thank You!", 13, 10, "--->", '$'
+    "After typing your name, press enter", 13, 10, "Thank You!", 13, 10, "--->", '$'
 nameIsEmptymsg db 13, 10, "Huh! your name is ...empty? Thats not a name!", 13, 10,
     "Let's try again!", 13, 10, '$'
 errorMSGCont db 13, 10, "Whoops!Invalid input. ", 13, 10,
@@ -100,6 +100,7 @@ printBorderline endp
 ReadUsersName proc
     xor cx, cx                  ; we'll set cx to 0 and use as an index for the array (c for counter)
     lea bx, NameArray           ; Load address of NameArray into di register (d for data)
+    mov [bx - 1], ' '           
     xor al,al                   ; set ax to 0
     xor si, si ; set si to 0
 readingLoop:
@@ -129,7 +130,7 @@ notACharacter:
     jmp readingLoop             ; if it's not a letter or a space, ignore it and read the next character
 
 storeCharacter:
-    mov [bx+si], al             ; store the character in the array
+    mov [bx + si], al             ; store the character in the array
     inc si                      ; increment the pointer
 
     inc cx                      ; increment the counter
@@ -140,6 +141,8 @@ storeCharacter:
 callTooLong:
     call toolong                ; call toolong procedure to print an error message
 endReading:
+    mov [bx + si], '$'           ; store the null character at the end of the array
+    ;mov [bx + si + 1], '$'           ; store the null character at the end of the array
     mov NameLength , cx         ; store the length of the name into length variable
     ret
 ReadUsersName endp
@@ -152,7 +155,13 @@ PrintUsersName proc
     xor si, si                  ; we'll set si to 0 and use as an index for the array (c for counter)
     mov si, NameLength          ; load the length of the name into si
     dec si                      ; decrement si by 1
+
     lea bx, NameArray           ; Load address of NameArray into di register 
+    dec si                      ; decrement si by 1
+
+    ; Check if the name is a single letter
+    cmp [bx + 1], '$'                   ; Compare si with 0
+    je printSingleLetter        ; If si is 0, jump to printSingleLetter
 
 ;Find the last space in the name
 getLastSpace:
@@ -181,6 +190,11 @@ actualPrintLastName:
     _PutCh 8                            ; Print a backspace (learned from Assignment 5)
     call printCommmaSpace               ; Print a comma and a space
     jmp printingOtherNames              ; GO on to printing other names
+
+printSingleLetter:
+    mov al, [bx]                ; Move to the first character in the name
+    _PutCh al                   ; Print the character
+    jmp endPrintingName         ; Jump to endPrintingName
 
 singleWordName:
     xor si, si                          ; Starting at the beginning of the single word name
@@ -264,7 +278,7 @@ Notempty:
     call PrintUsersName         ; Print the name in the form of [LastName, FirstName MiddleName]
     call printBorderline        ; Print a borderline
 
-    _PutStr NameArray           ; Print the name stored in NameArray
+    ;_PutStr NameArray           ; Print the name stored in NameArray (for testing purposes)
 
     jmp AskContinue             ; Ask the user if they want to continue
 

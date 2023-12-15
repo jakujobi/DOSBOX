@@ -37,20 +37,16 @@ welcomeMsg db 13, 10, 13, 10, "Hi there!", 13, 10,
     "Type your name at the arrow (--->) at the bottom of this message", 13, 10, 
     "* It should be in the form of [FirstName MiddleName LastName]", 13, 10, 
     "* No empty names please, and no more than 80 characters", 13, 10, 
-    "After that, press enter", 13, 10, 
-    "Thank You!", 13, 10, "--->", '$'
-
+    "After that, press enter", 13, 10, "Thank You!", 13, 10, "--->", '$'
 nameIsEmptymsg db 13, 10, "Huh! your name is ...empty? Thats not a name!", 13, 10,
     "Let's try again!", 13, 10, '$'
-
 errorMSGCont db 13, 10, "Whoops!Invalid input. ", 13, 10,
     "Please type Y or N.", '$' ; Error message for invalid input
 toolongMsg db 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'
-
-promptContinue db 13, 10, "Do you want to continue? (Y/N): ", '$' ; Prompt for continuing the program
-
+easterEgg db 13, 10, "Thank you for your great work teaching us!", 13, 10, 
+    "Happy Holidays!", 13, 10, "John Akujobi", 13, 10, '$'
+promptContinue db 13, 10, "Do you want to continue? (Y / N / or E): ", '$' ; Prompt for continuing the program
 comma db ", ", '$'
-
 borderline db 13, 10, 76 dup("_"), 13, 10, '$'
 
 ;;___________________________________________________________________
@@ -191,6 +187,39 @@ endPrintingName:
     ret                                 ; Return
 PrintUsersName endp
 
+; Delay the program for a while___________________________________________________
+Delay	PROC
+    push ecx                    ; save caller's CX
+    push ax                     ; save caller's AX
+    mov cx, 0FFFFh              ; Delay length (Learned this from stack overflow)
+    delayLoop:
+        nop
+		dec cx
+		jnz delayLoop
+        
+    pop ax                      ;restore caller's AX
+    pop ecx                     ;restore caller's CX
+    ret
+Delay	ENDP
+
+printEasterEgg proc
+    call printBorderline
+    pusha                          ; Restore all registers
+    lea bx, easterEgg             ; Load address of easterEgg
+    xor si, si
+easterLoop:
+    mov al, [bx + si]
+    call Delay
+    _PutCh al
+    inc si
+    cmp si, 75
+    jl easterLoop ; Restart the loop 
+
+    call printBorderline
+
+    popa
+    ret
+printEasterEgg endp
 
 ;;JAKUJ procedure is the main procedure
 JAKUJ    proc
@@ -231,8 +260,18 @@ AskContinue:
     cmp al, 'y'                 ; 
     je JAKUJprogramstart        ; Restart the program if input is 'y'
 
+    cmp al, 'E'         
+    je EasterChristmas
+    cmp al, 'e'         
+    je EasterChristmas
+
     _PutStr errorMSGCont        ; Display error message for invalid input
     jmp AskContinue             ; Jump back to ask continue prompt
+
+EasterChristmas:
+    call printBorderline
+    call printEasterEgg
+    jmp exitLoop
 
 exitLoop:
     _Exit 0                     ; Exit program with status 0

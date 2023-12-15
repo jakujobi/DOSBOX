@@ -49,10 +49,16 @@ toolongMsg db 13, 10, "Array limit of 80 characters reached!", 13, 10, '$'
 
 promptContinue db 13, 10, "Do you want to continue? (Y/N): ", '$' ; Prompt for continuing the program
 
+comma db ", ", '$'
+
+theSpace db " ", '$',
+
 ;;___________________________________________________________________
 .code  ; Start of code segment
 ;extrn GetDec:near
 ;extrn PutDec:near
+
+;;Printing Procedures, subroutines: I made these to avoid accidentally overwriting registers when i us _PutStr
 
 ; WelcomeMessage procedure prints a welcome message telling the user what to do
 WelcomeMessage proc
@@ -77,6 +83,23 @@ nameIsEmpty proc
     popa                        ; restore all registers
     ret
 nameIsEmpty endp
+
+;;printCommmaSpace procedure prints a comma and a space
+printCommmaSpace proc
+    pusha
+    _PutStr comma
+    popa
+    ret
+printCommmaSpace endp
+
+;;printSpace procedure prints a space
+printSpace proc
+    pusha
+    _PutStr theSpace
+    popa
+    ret
+printSpace endp
+
 
 
 ;_________________________________________________________________________
@@ -122,25 +145,50 @@ PrintUsersName proc
 getLastSpace:
     mov al, [dx+si]             ; Move to the previous character going backwards in the name
     cmp al, ' '                 ; Compare with space character
+    mov cx, si                  ; Move si to cx (saving it to print the rest of the names in printingOtherNames)
     je printLastName            ; If space, print the last name
     test ax, ax                 ; Perform bitwise AND on AX with itself
-    jz nameWithoutSpace         ; Jump to Zero if the result is 0
+    jz singleWordName           ; Jump to Zero if the result is 0
 
     dec si                      ; Decrement si by 1
     cmp si, 0                   ; Compare si with 0
-    je printLastName            ; Jump to nameWithoutSpace if si is 0
+    je printLastName            ; Jump to singleWordName if si is 0
 
     jmp getLastSpace            ; If not space, continue searching for space
 
 ;Print the name
 printLastName:
-    mov al, [di]
-    _PutCh al
-    dec di
-    cmp di, 0
-    jne printLastName
+    mov si, cx                          ; Print from where we left off
+actualPrintLastName:
+    mov al, [bx + si]                   ; Move to the first character in the last name
+    _PutCh al                           ; Print the first character
+    inc si
+    cmp si, NameLength                  ; Compare si with 0
+    jne actualPrintLastName             ; Restart the loop if si has not reached the end of the name
+    call printCommmaSpace               ; Print a comma and a space
+    jmp printingOtherNames              ; GO on to printing other names
 
-    _PutStr ", "
+singleWordName:
+    xor si, si                           ; Starting at the beginning of the single word name
+actualPrintingSingleWordName:       
+    mov al, [bx + si]                   ; Move to the first character in the single word name
+    _PutCh al                           ; Print the first character
+    add si, 1                           ; Increment si by 1
+    cmp si, NameLength                  ; Compare si with 0
+    jne actualPrintingSingleWordName    ; Restart the loop if si is not equal to the length of the name
+    jmp endPrintingName                 ; Jump to endPrintingName
+
+printingOtherNames:
+    xor si, si                          ; reset si to 0 to start at the beginning of the name
+actualPrintingOtherNames:
+    mov al, [bx + si]                   ; Move to the first character in the name
+    _PutCh al                           ; Print the first character
+    inc si                              ; Increment si by 1
+    cmp si, cx                          ; Check if we reached the position we stopped at in the last name
+    jne actualPrintingOtherNames        ; Restart the loop if si is not equal to the length of the name
+    jmp endPrintingName                 ; Jump to endPrintingName
+
+endPrintingName:
     popa
     ret
 PrintUsersName endp

@@ -2,7 +2,7 @@
 
 A comprehensive collection of x86 assembly language programs developed for CSC 314 (Assembly Language Programming). This repository contains completed student assignments demonstrating fundamental to advanced assembly programming concepts, along with the Microsoft MASM 6.11 development toolkit.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#-features)
 - [Repository Structure](#-repository-structure)
@@ -16,7 +16,7 @@ A comprehensive collection of x86 assembly language programs developed for CSC 3
 - [Project Status](#-project-status)
 - [License](#-license)
 
-## ✨ Features
+## Features
 
 - **Complete MASM 6.11 Toolkit**: Full Microsoft Macro Assembler Professional Development System, Version 6.11
 - **Assembly Workflow Examples**: Demonstrates complete development cycle from source to executable
@@ -27,7 +27,7 @@ A comprehensive collection of x86 assembly language programs developed for CSC 3
 - **Code Reusability**: Shared libraries (PCMAC.INC, UTIL.LIB) demonstrating modular programming
 - **Educational Documentation**: Assignment requirements and pseudocode included for learning reference
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 DOSBOX/
@@ -56,7 +56,7 @@ DOSBOX/
 
 For detailed architecture documentation, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## 🏗 Architecture
+## Architecture
 
 ### Assembly Program Structure
 
@@ -93,7 +93,7 @@ end main
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a complete system overview with diagrams.
 
-## 📋 Prerequisites
+## Prerequisites
 
 ### Required Software
 
@@ -113,11 +113,12 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a complete system overview 
 - **DOSBox**: 50 MB disk space, 16 MB RAM minimum
 - **Display**: VGA-compatible (any modern system)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install DOSBox
 
 **Windows:**
+
 ```bash
 # Download from https://www.dosbox.com/download.php?main=1
 # Or using Chocolatey:
@@ -125,11 +126,13 @@ choco install dosbox
 ```
 
 **macOS:**
+
 ```bash
 brew install dosbox
 ```
 
 **Linux:**
+
 ```bash
 # Debian/Ubuntu:
 sudo apt-get install dosbox
@@ -153,6 +156,7 @@ cd DOSBOX
 Create or edit your DOSBox configuration file to mount the repository:
 
 **Option A: Command-line mounting (temporary)**
+
 ```
 # Start DOSBox
 dosbox
@@ -195,7 +199,7 @@ FIRST.EXE
 
 You should see: `Hello, my name is Bill Jones`
 
-## 📖 Usage
+## Usage
 
 ### Standard Assembly Workflow
 
@@ -261,43 +265,44 @@ AKUJOBA6.exe
 # Enter two numbers when prompted to calculate their GCD
 ```
 
-## 📚 Program Catalog
+## Program Catalog
 
 ### Basic Programs
 
-| Program | Description | Key Concepts |
-|---------|-------------|--------------|
-| **FIRST** | Hello World program | Basic structure, string output, DOS INT 21h |
-| **TEMPLATE** | Reusable program skeleton | Project structure, PCMAC macros |
-| **char.asm** | Character output with delay | Loops, delays, cursor control |
-| **exp2.asm** | Simple expression example | Arithmetic operations |
+| Program            | Description                 | Key Concepts                                |
+| ------------------ | --------------------------- | ------------------------------------------- |
+| **FIRST**    | Hello World program         | Basic structure, string output, DOS INT 21h |
+| **TEMPLATE** | Reusable program skeleton   | Project structure, PCMAC macros             |
+| **char.asm** | Character output with delay | Loops, delays, cursor control               |
+| **exp2.asm** | Simple expression example   | Arithmetic operations                       |
 
 ### Course Assignments
 
-| Assignment | Program | Description | Demonstrates |
-|------------|---------|-------------|--------------|
-| **A2** | JOHNA2 | Basic I/O operations | User input, console output |
-| **A3** | AKUJOBIA3 | Date display program | DOS date service (INT 21h/2Ah), PutDec procedure |
-| **A4** | AKUJOBA4 | Temperature converter | Arithmetic (Celsius→Fahrenheit), formula implementation |
-| **A5** | AKUJOBA5 | Character animation | Screen positioning, delays, loops, user input validation |
-| **A6** | AKUJOBA6 + JCAGCD | GCD calculator | Multi-file projects, external procedures, Euclidean algorithm |
-| **A7** | AKUJOBA7 | Name formatter | String manipulation, array processing, complex parsing |
+| Assignment   | Program           | Description           | Demonstrates                                                  |
+| ------------ | ----------------- | --------------------- | ------------------------------------------------------------- |
+| **A2** | JOHNA2            | Basic I/O operations  | User input, console output                                    |
+| **A3** | AKUJOBIA3         | Date display program  | DOS date service (INT 21h/2Ah), PutDec procedure              |
+| **A4** | AKUJOBA4          | Temperature converter | Arithmetic (Celsius→Fahrenheit), formula implementation      |
+| **A5** | AKUJOBA5          | Character animation   | Screen positioning, delays, loops, user input validation      |
+| **A6** | AKUJOBA6 + JCAGCD | GCD calculator        | Multi-file projects, external procedures, Euclidean algorithm |
+| **A7** | AKUJOBA7          | Name formatter        | String manipulation, array processing, complex parsing        |
 
 ### Additional Programs
 
-| Program | Description | Features |
-|---------|-------------|----------|
+| Program          | Description        | Features                                |
+| ---------------- | ------------------ | --------------------------------------- |
 | **DOGAGE** | Dog age calculator | Arithmetic operations, user interaction |
 
 ### Pre-compiled Binaries
 
 The repository includes pre-built executables (*.EXE) for immediate testing. These are MS-DOS MZ executables that run in DOSBox.
 
-## 🔧 Development Workflow
+## Development Workflow
 
 ### Setting Up Your Environment
 
 See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for comprehensive development setup, including:
+
 - DOSBox configuration tips
 - Editor setup (syntax highlighting for .asm files)
 - Debugging with CodeView
@@ -332,27 +337,31 @@ c:\MASM611\BIN\CV myfile.exe
 ### Testing
 
 Each program directory may contain:
+
 - **Assignment requirements** (*.md, *.doc): Original specifications
 - **Pseudocode** (*.md): Algorithm planning
 - **Test cases**: Documented in assignment files
 
-## 💡 What This Project Demonstrates
+## What This Project Demonstrates
 
 This repository showcases practical skills relevant to systems programming and low-level development:
 
 ### Assembly Language Proficiency
+
 - **x86 Architecture Understanding**: Direct hardware interaction through registers, memory models, and instruction sets
   - See: All *.asm files, particularly [AKUJOBA7.asm](Programs/AKUJOBA7/AKUJOBA7.asm) (400+ lines)
 - **Memory Management**: Stack manipulation, segment registers, data alignment
   - Example: [TEMPLATE.asm](Programs/TEMPLATE/TEMPLATE.asm) - `.stack 100h`, `.model small`
 
 ### Systems Programming
+
 - **OS Interface**: DOS interrupt services (INT 21h) for I/O and system calls
   - Example: [AKUJOBIA3/AKUJOBA3.asm](Programs/AKUJOBIA3/AKUJOBA3.asm) - Date service (AH=2Ah)
 - **Low-Level I/O**: Direct console control, character/string manipulation
   - Example: [AKUJOBA5/AKUJOBA5.asm](Programs/AKUJOBA5/AKUJOBA5.asm) - Screen cursor animation
 
 ### Software Engineering
+
 - **Modular Programming**: Procedures, external libraries, code reuse
   - Example: [AKUJOBA6/](Programs/AKUJOBA6/) - Multi-file project with [JCAGCD.asm](Programs/AKUJOBA6/JCAGCD.asm) procedure
 - **Documentation**: Comprehensive comments, assignment specifications
@@ -361,6 +370,7 @@ This repository showcases practical skills relevant to systems programming and l
   - Template: [TEMPLATE/TEMPLATE.asm](Programs/TEMPLATE/TEMPLATE.asm)
 
 ### Algorithm Implementation
+
 - **Euclidean Algorithm**: Greatest Common Divisor calculation
   - Implementation: [JCAGCD.asm](Programs/AKUJOBA6/JCAGCD.asm)
 - **String Processing**: Parsing, searching, reformatting
@@ -369,6 +379,7 @@ This repository showcases practical skills relevant to systems programming and l
   - Example: [AKUJOBA4/AKUJOBA4.asm](Programs/AKUJOBA4/AKUJOBA4.asm) - (C * 9/5) + 32
 
 ### Development Practices
+
 - **Version Control**: Git repository with clear history
   - Repository: [jakujobi/DOSBOX](https://github.com/jakujobi/DOSBOX)
 - **Build Process**: Assembly, linking, library management
@@ -379,6 +390,7 @@ This repository showcases practical skills relevant to systems programming and l
   - Assignment 2 (basic I/O) → Assignment 7 (complex string processing)
 
 ### Tools & Ecosystem
+
 - **Microsoft MASM 6.11**: Professional assembler with macro preprocessor
   - Included: [MASM611/](MASM611/) - Complete toolkit
 - **Library Development**: Created/used shared utility libraries
@@ -386,15 +398,16 @@ This repository showcases practical skills relevant to systems programming and l
 - **Legacy System Knowledge**: DOS environment, 16-bit programming, real-mode memory
   - All programs target MS-DOS real mode with 16-bit architecture
 
-## 📊 Project Status
+## Project Status
 
-**Status**: Complete ✅
+**Status**: Complete
 
 This repository represents completed coursework for CSC 314 (Fall 2023). All assignments have been:
-- ✅ Successfully assembled and linked
-- ✅ Tested with DOSBox
-- ✅ Documented with comments and specifications
-- ✅ Compiled to working executables (*.EXE files included)
+
+- Successfully assembled and linked
+- Tested with DOSBox
+- Documented with comments and specifications
+- Compiled to working executables (*.EXE files included)
 
 ### Tested Environment
 
@@ -409,9 +422,10 @@ This repository represents completed coursework for CSC 314 (Fall 2023). All ass
 - **Text Mode**: Console-only programs, no graphics
 - **Legacy Tools**: MASM 6.11 is from 1993; modern alternatives exist (NASM, FASM)
 
-## 🤝 Contributing
+## Contributing
 
 This is an educational project archive. While pull requests are welcome for:
+
 - Documentation improvements
 - Bug fixes in existing code
 - Additional educational examples
@@ -420,7 +434,7 @@ Please note that assignment solutions should not be substantially modified, as t
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📄 License
+## License
 
 This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
 
@@ -437,7 +451,7 @@ This project is licensed under the **GNU General Public License v3.0** - see the
 - MASM toolkit provided for educational and archival purposes
 - If using this repository for learning, please cite appropriately and do not submit as your own work
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 - **Course**: CSC 314 - Assembly Language Programming
 - **Instructor**: Course assignments and specifications from Fall 2023

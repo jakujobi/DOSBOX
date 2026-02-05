@@ -1,0 +1,27 @@
+# Assembly Build Artifacts
+*.obj
+*.map
+*.lst
+*.bak
+*.tmp
+*.sav
+
+# Editor Backup Files
+*~
+*.swp
+*.swo
+.DS_Store
+
+# IDE Files
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Compiled Executables (optional - uncomment if you don't want to commit EXE files)
+# *.exe
+
+# Temporary Files
+tmp/
+temp/
+*.log
